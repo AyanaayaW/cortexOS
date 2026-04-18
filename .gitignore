@@ -1,0 +1,11 @@
+.obsidian/workspace
+.obsidian/workspace.json
+.obsidian/workspace-mobile.json
+.obsidian/app.json
+*.mp4
+*.mov
+*.zip
+.DS_Store
+**/.DS_Store
+.env
+*.env
