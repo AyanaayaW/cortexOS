@@ -1,21 +1,21 @@
 <div align="center">
 
-# 🗂️ studyOS
+# 🗂️ cortexOS
 
 **An AI-powered Obsidian vault scaffold for students.**
 IB Diploma · A-Levels · University · Any structured study system.
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE)
-[![Version](https://img.shields.io/badge/version-1.0-green.svg)](https://github.com/AyanaayaW/studyOS-template/releases/tag/v1.0)
+[![Version](https://img.shields.io/badge/version-1.0-green.svg)](https://github.com/AyanaayaW/cortexOS/releases/tag/v1.0)
 [![Obsidian](https://img.shields.io/badge/Obsidian-compatible-7C3AED)](https://obsidian.md)
 
 </div>
 
 ---
 
-## What is studyOS?
+## What is cortexOS?
 
-studyOS is a ready-to-use Obsidian vault template that wires together four AI tools into a single, consistent study workflow:
+cortexOS is a ready-to-use Obsidian vault template that wires together four AI tools into a single, consistent study workflow:
 
 - **A clean folder structure** organised by subject, content type, and source
 - **4 AI shell scripts** — generate notes, summaries, explanations, and worksheets straight from the terminal
@@ -42,7 +42,7 @@ Designed for students who want AI to handle the scaffolding (formatting, practic
 ## Folder Structure
 
 ```
-studyOS/
+cortexOS/
 ├── Notes/
 │   └── <Subject>/           ← one folder per subject
 ├── Worksheets/
@@ -78,8 +78,8 @@ studyOS/
 ### 1. Clone
 
 ```bash
-git clone https://github.com/AyanaayaW/studyOS-template.git ~/studyOS
-cd ~/studyOS
+git clone https://github.com/AyanaayaW/cortexOS.git ~/cortexOS
+cd ~/cortexOS
 ```
 
 ### 2. Add your subjects
@@ -88,9 +88,9 @@ cd ~/studyOS
 SUBJECTS=("Math" "Physics" "History" "English" "Economics")
 
 for s in "${SUBJECTS[@]}"; do
-  mkdir -p ~/studyOS/Notes/"$s"
-  mkdir -p ~/studyOS/Worksheets/"$s"
-  mkdir -p ~/studyOS/"AI Outputs"/Notes/"$s"
+  mkdir -p ~/cortexOS/Notes/"$s"
+  mkdir -p ~/cortexOS/Worksheets/"$s"
+  mkdir -p ~/cortexOS/"AI Outputs"/Notes/"$s"
 done
 ```
 
@@ -98,7 +98,7 @@ Then **edit `CLAUDE.md`** — update the subjects table so Claude knows your cou
 
 ### 3. Open in Obsidian
 
-**Open folder as vault** → select `~/studyOS`
+**Open folder as vault** → select `~/cortexOS`
 
 ### 4. Install the 5 community plugins
 
@@ -115,9 +115,9 @@ Set Templater's template folder to `Templates/`.
 ### 5. Connect to GitHub
 
 ```bash
-cd ~/studyOS
+cd ~/cortexOS
 git init && git branch -M main
-gh repo create studyOS --private --source=. --remote=origin --push
+gh repo create cortexOS --private --source=. --remote=origin --push
 ```
 
 ---
@@ -233,7 +233,7 @@ Set `reviewed: true` after verifying AI-generated content against your syllabus 
 
 ## Contributing
 
-PRs welcome. If you adapt studyOS for a new study system (university, professional exams, etc.) and want to share your configuration, open an issue or pull request.
+PRs welcome. If you adapt cortexOS for a new study system (university, professional exams, etc.) and want to share your configuration, open an issue or pull request.
 
 ---
 

@@ -1,4 +1,4 @@
-# studyOS Setup Guide
+# cortexOS Setup Guide
 
 Complete these steps after cloning the repo or downloading the template.
 
@@ -7,11 +7,11 @@ Complete these steps after cloning the repo or downloading the template.
 ## 1. Clone or Download
 
 ```bash
-git clone https://github.com/AyanaayaW/studyOS-template.git ~/studyOS
-cd ~/studyOS
+git clone https://github.com/AyanaayaW/cortexOS.git ~/cortexOS
+cd ~/cortexOS
 ```
 
-Or download the ZIP from the [Releases page](https://github.com/AyanaayaW/studyOS-template/releases) and unzip to your preferred location.
+Or download the ZIP from the [Releases page](https://github.com/AyanaayaW/cortexOS/releases) and unzip to your preferred location.
 
 ---
 
@@ -23,9 +23,9 @@ Edit the `Notes/`, `Worksheets/`, and `AI Outputs/Notes/` directories to match y
 SUBJECTS=("Math" "Physics" "Chemistry" "History" "English")
 
 for s in "${SUBJECTS[@]}"; do
-  mkdir -p ~/studyOS/Notes/"$s"
-  mkdir -p ~/studyOS/Worksheets/"$s"
-  mkdir -p ~/studyOS/"AI Outputs"/Notes/"$s"
+  mkdir -p ~/cortexOS/Notes/"$s"
+  mkdir -p ~/cortexOS/Worksheets/"$s"
+  mkdir -p ~/cortexOS/"AI Outputs"/Notes/"$s"
 done
 ```
 
@@ -37,7 +37,7 @@ Then **edit `CLAUDE.md`** — update the subjects table so Claude Code knows you
 
 1. Launch **Obsidian**
 2. Click **Open folder as vault**
-3. Navigate to your `studyOS` folder and click **Open**
+3. Navigate to your `cortexOS` folder and click **Open**
 
 ---
 
@@ -66,9 +66,9 @@ Then **edit `CLAUDE.md`** — update the subjects table so Claude Code knows you
 ## 6. Connect to GitHub
 
 ```bash
-cd ~/studyOS
+cd ~/cortexOS
 git init && git branch -M main
-gh repo create studyOS --private --source=. --remote=origin --push
+gh repo create cortexOS --private --source=. --remote=origin --push
 ```
 
 Obsidian Git will auto-commit and push every 5 minutes from here on.
@@ -98,7 +98,7 @@ If anything is missing:
 ## 8. End-to-End Test
 
 ```bash
-cd ~/studyOS
+cd ~/cortexOS
 ./scripts/claude-note.sh Physics "Newton's Laws" concept-note
 ```
 

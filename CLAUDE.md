@@ -1,4 +1,4 @@
-# studyOS — Persistent Claude Code Context
+# cortexOS — Persistent Claude Code Context
 
 > **Edit this file to match your subjects before your first session.**
 > Claude Code reads this automatically in every session inside this vault.
