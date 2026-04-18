@@ -124,71 +124,83 @@ gh repo create cortexOS --private --source=. --remote=origin --push
 
 ## AI Scripts
 
-### `claude-note.sh` — Generate a study note
+All four scripts share the same interface: **action first, model second.**
+
+```
+<action> <model> [args…]
+```
+
+Swap any model in or out — the action stays the same.
+
+---
+
+### `note` — Generate a study note
 
 ```bash
-./scripts/claude-note.sh <subject> "<topic>" [type]
-# type defaults to: concept-note
+./scripts/note <model> <subject> "<topic>" [type]
 ```
 
 ```bash
-./scripts/claude-note.sh Physics "Newton's Laws" concept-note
-./scripts/claude-note.sh Math "Integration by Parts" concept-note
-./scripts/claude-note.sh History "Causes of WWI" essay-plan
+./scripts/note claude  Physics "Newton's Laws"
+./scripts/note gemini  Math    "Integration by Parts"
+./scripts/note ollama  History "Causes of WWI" essay-plan
+./scripts/note ollama/mistral Econ "Supply and Demand"
 ```
 
 Output → `AI Outputs/Notes/<subject>/YYYY-MM-DD <topic> — <type>.md`
 
 ---
 
-### `gemini-summarise.sh` — Summarise a PDF or text file
+### `explain` — Get an explanation (question or file)
 
 ```bash
-./scripts/gemini-summarise.sh <filepath> <subject> "<topic>"
+./scripts/explain <model> "<question-or-filepath>" [subject]
 ```
 
 ```bash
-./scripts/gemini-summarise.sh ~/Downloads/chapter3.pdf Chemistry "Organic Chemistry"
-./scripts/gemini-summarise.sh ~/notes/lecture5.txt Economics "Supply and Demand"
+./scripts/explain claude  "What is the photoelectric effect?"
+./scripts/explain gemini  "chapter5.pdf"  Physics
+./scripts/explain ollama  "Explain entropy in simple terms"
+./scripts/explain ollama/mistral "What is a p-value?" Stats
 ```
 
-Output → `AI Outputs/Notes/<subject>/YYYY-MM-DD <topic> — gemini-summary.md`
+Detects automatically whether the second argument is a text question or a file path. For Gemini + files, uses `--include-directories` so Gemini reads the file natively.
 
-Uses `--include-directories` to pass files to the Gemini agentic CLI. Falls back to inline text embedding for plain-text files. Requires [Google Gemini CLI](https://github.com/google-gemini/gemini-cli): `npm install -g @google/gemini-cli`
+Output → `AI Outputs/Explanations/YYYY-MM-DD <slug>.md`
 
 ---
 
-### `ollama-explain.sh` — Quick offline explanation
+### `worksheet` — Generate a practice worksheet + full mark scheme
 
 ```bash
-./scripts/ollama-explain.sh "<question>" [model]
-# model defaults to: llama3.2
+./scripts/worksheet <model> <subject> "<topic>" [num-questions]
 ```
 
 ```bash
-./scripts/ollama-explain.sh "What is the difference between enthalpy and entropy?"
-./scripts/ollama-explain.sh "Explain p-values in plain English" llama3.2
-```
-
-Output → `AI Outputs/Explanations/YYYY-MM-DD <question-slug>.md`
-
-Requires [Ollama](https://ollama.com): `ollama pull llama3.2`
-
----
-
-### `ai-worksheet.sh` — Generate a practice worksheet + full mark scheme
-
-```bash
-./scripts/ai-worksheet.sh <subject> "<topic>" [num-questions]
-# num-questions defaults to: 6
-```
-
-```bash
-./scripts/ai-worksheet.sh Math "Differentiation" 8
-./scripts/ai-worksheet.sh Economics "Elasticity" 6
+./scripts/worksheet claude  Math    "Differentiation" 8
+./scripts/worksheet gemini  Physics "Electric Fields"
+./scripts/worksheet ollama  Econ    "Elasticity" 5
 ```
 
 Output → `AI Outputs/Worksheets/YYYY-MM-DD <subject> — <topic> Worksheet.md`
+
+---
+
+### `summarise` — Summarise a file into a structured note
+
+```bash
+./scripts/summarise <model> "<filepath>" <subject> "<topic>"
+```
+
+```bash
+./scripts/summarise gemini  ~/Downloads/textbook.pdf  Chemistry "Equilibrium"
+./scripts/summarise claude  lecture_notes.txt          Math      "Calculus"
+./scripts/summarise ollama  chapter3.md                History   "Cold War"
+```
+
+For Gemini, uses `--include-directories` with a text-embed fallback. For PDFs with non-Gemini models, requires `pdftotext` (`brew install poppler`).
+
+Output → `AI Outputs/Notes/<subject>/YYYY-MM-DD <topic> — summary.md`
 
 ---
 
@@ -196,10 +208,10 @@ Output → `AI Outputs/Worksheets/YYYY-MM-DD <subject> — <topic> Worksheet.md`
 
 | Tool | Install | Required for |
 |------|---------|-------------|
-| [Claude Code](https://claude.ai/code) | See docs | `claude-note.sh`, `ai-worksheet.sh` |
-| [Gemini CLI](https://github.com/google-gemini/gemini-cli) | `npm install -g @google/gemini-cli` | `gemini-summarise.sh` |
-| [Ollama](https://ollama.com) | Download from site | `ollama-explain.sh` |
-| [jq](https://jqlang.github.io/jq/) | `brew install jq` | `ollama-explain.sh` |
+| [Claude Code](https://claude.ai/code) | See docs | `note`, `worksheet`, `explain`, `summarise` |
+| [Gemini CLI](https://github.com/google-gemini/gemini-cli) | `npm install -g @google/gemini-cli` | `note`, `worksheet`, `explain`, `summarise` |
+| [Ollama](https://ollama.com) | Download from site | `note`, `worksheet`, `explain`, `summarise` |
+| [jq](https://jqlang.github.io/jq/) | `brew install jq` | All Ollama routes |
 | [Git](https://git-scm.com) | Pre-installed on macOS | Everything |
 | [gh CLI](https://cli.github.com) | `brew install gh` | Initial GitHub setup |
 

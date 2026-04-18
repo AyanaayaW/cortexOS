@@ -1,0 +1,163 @@
+#!/usr/bin/env bash
+# summarise — Summarise a file (PDF / txt / md) using any AI tool
+# Usage: summarise <model> "<filepath>" <subject> "<topic>"
+#
+#   model    : claude | gemini | ollama | ollama/<name>
+#   filepath : path to a PDF or text file
+#   subject  : subject folder name
+#   topic    : topic label for the output note
+#
+# Examples:
+#   summarise gemini  chapter5.pdf        Chemistry "Organic Chemistry"
+#   summarise claude  lecture_notes.txt   Physics   "Quantum Mechanics"
+#   summarise ollama  ~/Downloads/ch3.md  Math      "Calculus"
+#   summarise ollama/mistral notes.pdf    History   "Cold War"
+
+set -euo pipefail
+
+MODEL="${1:-}"
+FILEPATH="${2:-}"
+SUBJECT="${3:-}"
+TOPIC="${4:-}"
+DATE="$(date +%Y-%m-%d)"
+VAULT_DIR="$(cd "$(dirname "$0")/.." && pwd)"
+OUTPUT_DIR="$VAULT_DIR/AI Outputs/Notes/$SUBJECT"
+
+if [[ -z "$MODEL" || -z "$FILEPATH" || -z "$SUBJECT" || -z "$TOPIC" ]]; then
+  echo "Usage: summarise <model> \"<filepath>\" <subject> \"<topic>\""
+  echo "  model: claude | gemini | ollama | ollama/<name>"
+  exit 1
+fi
+
+if [[ ! -f "$FILEPATH" ]]; then
+  echo "Error: file not found: $FILEPATH"
+  exit 1
+fi
+
+FILE_ABS="$(cd "$(dirname "$FILEPATH")" && pwd)/$(basename "$FILEPATH")"
+FILE_DIR="$(dirname "$FILE_ABS")"
+FILE_NAME="$(basename "$FILE_ABS")"
+FILE_EXT="${FILE_ABS##*.}"
+
+mkdir -p "$OUTPUT_DIR"
+
+OUTPUT_FILE="$OUTPUT_DIR/$DATE $TOPIC — summary.md"
+SUBJECT_TAG="$(echo "$SUBJECT" | tr '[:upper:]' '[:lower:]' | tr ' ' '-')"
+TOPIC_TAG="$(echo "$TOPIC"   | tr '[:upper:]' '[:lower:]' | tr ' ' '-')"
+MODEL_SOURCE="$(echo "$MODEL" | cut -d'/' -f1)"
+
+PROMPT="You are an expert tutor. Read the file '$FILE_NAME' and produce a structured study summary for a student.
+
+Subject: $SUBJECT | Topic focus: $TOPIC
+
+Output a single Markdown document with this structure:
+---
+title: \"$TOPIC — Summary\"
+subject: \"$SUBJECT\"
+type: ai-output
+date: $DATE
+tags: [$SUBJECT_TAG, $TOPIC_TAG, summary]
+source: $MODEL_SOURCE
+reviewed: false
+---
+
+## Key Concepts
+(Concise bullets. LaTeX for all equations: inline \$...\$, block \$\$...\$\$)
+
+## Important Equations
+(Table: Equation | Meaning | When to use)
+
+## ⭐ Key Points
+(High-priority content worth knowing for exams or assessments)
+
+## Common Mistakes
+(Errors students commonly make on this topic)
+
+## Practice Questions
+(3 exam-style questions with mark allocations)
+
+Rules: concise, no filler, LaTeX for ALL equations."
+
+echo "summarise [$MODEL] $FILE_NAME → $SUBJECT / $TOPIC …"
+
+# ── Route to model ────────────────────────────────────────────────────────────
+case "$MODEL" in
+
+  claude)
+    if ! command -v claude &>/dev/null; then
+      echo "Error: 'claude' not found — install at https://claude.ai/code"; exit 1
+    fi
+    # Embed file content for Claude
+    if [[ "$FILE_EXT" == "pdf" ]] && command -v pdftotext &>/dev/null; then
+      FILE_BODY="$(pdftotext "$FILE_ABS" -)"
+    else
+      FILE_BODY="$(cat "$FILE_ABS")"
+    fi
+    claude --print "$PROMPT
+
+--- FILE CONTENT: $FILE_NAME ---
+$FILE_BODY" > "$OUTPUT_FILE"
+    ;;
+
+  gemini)
+    if ! command -v gemini &>/dev/null; then
+      echo "Error: 'gemini' not found — run: npm install -g @google/gemini-cli"; exit 1
+    fi
+    # Primary: let Gemini read the file natively via --include-directories
+    if gemini --include-directories "$FILE_DIR" -p "$PROMPT" > "$OUTPUT_FILE" 2>/dev/null; then
+      :
+    else
+      # Fallback: embed text content
+      echo "Note: --include-directories failed, falling back to inline content…"
+      if [[ "$FILE_EXT" == "pdf" ]]; then
+        if command -v pdftotext &>/dev/null; then
+          FILE_BODY="$(pdftotext "$FILE_ABS" -)"
+        else
+          echo "Error: Can't read PDF and 'pdftotext' not installed. Run: brew install poppler"
+          rm -f "$OUTPUT_FILE"; exit 1
+        fi
+      else
+        FILE_BODY="$(cat "$FILE_ABS")"
+      fi
+      gemini -p "$PROMPT
+
+--- FILE CONTENT: $FILE_NAME ---
+$FILE_BODY" > "$OUTPUT_FILE"
+    fi
+    ;;
+
+  ollama|ollama/*)
+    OLLAMA_MODEL="${MODEL#ollama/}"
+    [[ "$OLLAMA_MODEL" == "ollama" ]] && OLLAMA_MODEL="llama3.2"
+    if ! command -v jq &>/dev/null; then
+      echo "Error: 'jq' not found — run: brew install jq"; exit 1
+    fi
+    if ! curl -sf http://localhost:11434/api/tags &>/dev/null; then
+      echo "Error: Ollama not running — start with: ollama serve"; exit 1
+    fi
+    if [[ "$FILE_EXT" == "pdf" ]] && command -v pdftotext &>/dev/null; then
+      FILE_BODY="$(pdftotext "$FILE_ABS" -)"
+    else
+      FILE_BODY="$(cat "$FILE_ABS" 2>/dev/null || echo "[could not read file]")"
+    fi
+    FULL_PROMPT="$PROMPT
+
+--- FILE CONTENT: $FILE_NAME ---
+$FILE_BODY"
+    RESPONSE=$(curl -sf http://localhost:11434/api/generate \
+      -H "Content-Type: application/json" \
+      -d "$(jq -n --arg m "$OLLAMA_MODEL" --arg p "$FULL_PROMPT" \
+            '{model:$m,prompt:$p,stream:false}')" \
+      | jq -r '.response')
+    [[ -z "$RESPONSE" ]] && { echo "Error: empty response — is '$OLLAMA_MODEL' pulled? Run: ollama pull $OLLAMA_MODEL"; exit 1; }
+    printf '%s\n' "$RESPONSE" > "$OUTPUT_FILE"
+    ;;
+
+  *)
+    echo "Error: unknown model '$MODEL'"
+    echo "Valid options: claude | gemini | ollama | ollama/<name>"
+    exit 1
+    ;;
+esac
+
+echo "✅ Saved to: $OUTPUT_FILE"

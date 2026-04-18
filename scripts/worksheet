@@ -1,0 +1,112 @@
+#!/usr/bin/env bash
+# worksheet — Generate a practice worksheet + mark scheme from any AI tool
+# Usage: worksheet <model> <subject> "<topic>" [num-questions]
+#
+#   model         : claude | gemini | ollama | ollama/<name>
+#   subject       : subject folder name (e.g. Math, Physics)
+#   topic         : topic name
+#   num-questions : number of questions (default: 6)
+#
+# Examples:
+#   worksheet claude  Math    "Integration by Parts" 8
+#   worksheet gemini  Physics "Electric Fields"
+#   worksheet ollama  Econ    "Elasticity" 5
+#   worksheet ollama/mistral Chem "Equilibrium"
+
+set -euo pipefail
+
+MODEL="${1:-}"
+SUBJECT="${2:-}"
+TOPIC="${3:-}"
+NUM_Q="${4:-6}"
+DATE="$(date +%Y-%m-%d)"
+VAULT_DIR="$(cd "$(dirname "$0")/.." && pwd)"
+OUTPUT_DIR="$VAULT_DIR/AI Outputs/Worksheets"
+
+if [[ -z "$MODEL" || -z "$SUBJECT" || -z "$TOPIC" ]]; then
+  echo "Usage: worksheet <model> <subject> \"<topic>\" [num-questions]"
+  echo "  model: claude | gemini | ollama | ollama/<name>"
+  echo "  num-questions defaults to: 6"
+  exit 1
+fi
+
+mkdir -p "$OUTPUT_DIR"
+
+OUTPUT_FILE="$OUTPUT_DIR/$DATE $SUBJECT — $TOPIC Worksheet.md"
+SUBJECT_TAG="$(echo "$SUBJECT" | tr '[:upper:]' '[:lower:]' | tr ' ' '-')"
+TOPIC_TAG="$(echo "$TOPIC"   | tr '[:upper:]' '[:lower:]' | tr ' ' '-')"
+MODEL_SOURCE="$(echo "$MODEL" | cut -d'/' -f1)"
+
+PROMPT="You are an expert tutor and examiner. Create a rigorous practice worksheet for a student.
+
+Subject: $SUBJECT
+Topic: $TOPIC
+Number of questions: $NUM_Q
+
+Requirements:
+- Begin with YAML frontmatter:
+  ---
+  title: \"$TOPIC Worksheet\"
+  subject: \"$SUBJECT\"
+  type: worksheet
+  date: $DATE
+  tags: [$SUBJECT_TAG, $TOPIC_TAG, worksheet]
+  source: $MODEL_SOURCE
+  reviewed: false
+  ---
+- Difficulty spread:
+  - First 2 questions: easy (recall, 2–3 marks each)
+  - Middle questions: medium (application, 4–6 marks each)
+  - Final 1 question: hard (synthesis/evaluation, 8–10 marks)
+- LaTeX for ALL equations (inline: \$...\$, block: \$\$...\$\$)
+- Each question numbered with mark allocation e.g. [4 marks]
+- After all questions: a full Mark Scheme with worked solutions
+  - Method marks (M), Answer marks (A), Reasoning marks (R) clearly labelled
+  - Accept alternative valid methods
+- No filler. Precise academic language."
+
+echo "worksheet [$MODEL] $SUBJECT / $TOPIC ($NUM_Q questions) …"
+
+# ── Route to model ────────────────────────────────────────────────────────────
+case "$MODEL" in
+
+  claude)
+    if ! command -v claude &>/dev/null; then
+      echo "Error: 'claude' not found — install at https://claude.ai/code"; exit 1
+    fi
+    claude --print "$PROMPT" > "$OUTPUT_FILE"
+    ;;
+
+  gemini)
+    if ! command -v gemini &>/dev/null; then
+      echo "Error: 'gemini' not found — run: npm install -g @google/gemini-cli"; exit 1
+    fi
+    gemini -p "$PROMPT" > "$OUTPUT_FILE"
+    ;;
+
+  ollama|ollama/*)
+    OLLAMA_MODEL="${MODEL#ollama/}"
+    [[ "$OLLAMA_MODEL" == "ollama" ]] && OLLAMA_MODEL="llama3.2"
+    if ! command -v jq &>/dev/null; then
+      echo "Error: 'jq' not found — run: brew install jq"; exit 1
+    fi
+    if ! curl -sf http://localhost:11434/api/tags &>/dev/null; then
+      echo "Error: Ollama not running — start with: ollama serve"; exit 1
+    fi
+    RESPONSE=$(curl -sf http://localhost:11434/api/generate \
+      -H "Content-Type: application/json" \
+      -d "$(jq -n --arg m "$OLLAMA_MODEL" --arg p "$PROMPT" \
+            '{model:$m,prompt:$p,stream:false}')" \
+      | jq -r '.response')
+    [[ -z "$RESPONSE" ]] && { echo "Error: empty response — is '$OLLAMA_MODEL' pulled? Run: ollama pull $OLLAMA_MODEL"; exit 1; }
+    printf '%s\n' "$RESPONSE" > "$OUTPUT_FILE"
+    ;;
+
+  *)
+    echo "Error: unknown model '$MODEL'"
+    echo "Valid options: claude | gemini | ollama | ollama/<name>"
+    exit 1
+    ;;
+esac
+
+echo "✅ Saved to: $OUTPUT_FILE"

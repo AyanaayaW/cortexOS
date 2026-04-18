@@ -65,12 +65,39 @@ reviewed: false
 
 ## Scripts Reference
 
+All scripts follow the same pattern: **action first, model second.**
+
+```
+<action> <model> [args…]
+```
+
+Supported models: `claude` · `gemini` · `ollama` · `ollama/<name>` (e.g. `ollama/mistral`)
+
 | Script | Usage | Output |
 |--------|-------|--------|
-| `claude-note.sh` | `./scripts/claude-note.sh <subject> "<topic>" [type]` | `AI Outputs/Notes/<subject>/YYYY-MM-DD <topic> — <type>.md` |
-| `gemini-summarise.sh` | `./scripts/gemini-summarise.sh <filepath> <subject> "<topic>"` | `AI Outputs/Notes/<subject>/YYYY-MM-DD <topic> — gemini-summary.md` |
-| `ollama-explain.sh` | `./scripts/ollama-explain.sh "<question>" [model]` | `AI Outputs/Explanations/YYYY-MM-DD <question-slug>.md` |
-| `ai-worksheet.sh` | `./scripts/ai-worksheet.sh <subject> "<topic>" [num-questions]` | `AI Outputs/Worksheets/YYYY-MM-DD <subject> — <topic> Worksheet.md` |
+| `note` | `./scripts/note <model> <subject> "<topic>" [type]` | `AI Outputs/Notes/<subject>/YYYY-MM-DD <topic> — <type>.md` |
+| `explain` | `./scripts/explain <model> "<question-or-file>" [subject]` | `AI Outputs/Explanations/YYYY-MM-DD <slug>.md` |
+| `worksheet` | `./scripts/worksheet <model> <subject> "<topic>" [n]` | `AI Outputs/Worksheets/YYYY-MM-DD <subject> — <topic> Worksheet.md` |
+| `summarise` | `./scripts/summarise <model> "<filepath>" <subject> "<topic>"` | `AI Outputs/Notes/<subject>/YYYY-MM-DD <topic> — summary.md` |
+
+### Quick examples
+
+```zsh
+note      claude  Physics  "Newton's Laws"
+note      gemini  Math     "Integration by Parts"
+note      ollama  Chem     "Organic Reactions"
+
+explain   claude  "What is the photoelectric effect?"
+explain   gemini  "chapter5.pdf"  Physics
+explain   ollama  "Explain entropy in simple terms"
+
+worksheet claude  Math     "Differentiation" 8
+worksheet gemini  Physics  "Electric Fields"
+worksheet ollama/mistral Econ "Elasticity"
+
+summarise gemini  ~/Downloads/textbook.pdf  Chem  "Equilibrium"
+summarise claude  lecture_notes.txt         Math  "Calculus"
+```
 
 ---
 
