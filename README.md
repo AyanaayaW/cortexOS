@@ -54,18 +54,22 @@ It's not tied to any curriculum, industry, or domain. You define your **Spaces**
 ### macOS / Linux
 
 ```bash
-git clone https://github.com/AyanaayaW/cortexOS.git ~/CortexOS
-cd ~/CortexOS
+git clone https://github.com/AyanaayaW/cortexOS.git ~/cortexOS-repo
+cd ~/cortexOS-repo
 bash install.sh
 ```
+
+This clones the project repo and runs the installer, which sets up your personal vault at `~/CortexOS-vault/`.
 
 ### Windows
 
 ```powershell
-git clone https://github.com/AyanaayaW/cortexOS.git $HOME\CortexOS
-cd $HOME\CortexOS
+git clone https://github.com/AyanaayaW/cortexOS.git $HOME\cortexOS-repo
+cd $HOME\cortexOS-repo
 .\install.bat
 ```
+
+Your personal vault is created at `%USERPROFILE%\CortexOS-vault\`.
 
 Or directly in PowerShell:
 
@@ -121,14 +125,14 @@ No API key needed. Runs entirely on your machine.
 ### macOS / Linux
 
 ```bash
-cd ~/CortexOS
+cd ~/CortexOS-vault
 bash update.sh
 ```
 
 ### Windows
 
 ```powershell
-cd $HOME\CortexOS
+cd $HOME\CortexOS-vault
 powershell -File update.ps1
 ```
 
@@ -157,7 +161,7 @@ Install these via **Settings → Community Plugins → Browse** inside Obsidian:
 ## Vault Structure
 
 ```
-~/CortexOS/
+~/CortexOS-vault/
 ├── Dashboard.md                  ← main home screen
 ├── _System/
 │   ├── Templates/                ← note, worksheet, flashcard templates

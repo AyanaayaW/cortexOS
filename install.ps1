@@ -66,7 +66,8 @@ Write-Host ""
 Write-Host "Setting up CortexOS vault..." -ForegroundColor White
 Write-Host ""
 
-$vaultDir = "$HOME\CortexOS"
+$vaultDir = "$HOME\CortexOS-vault"
+$repoUrl = "https://github.com/AyanaayaW/cortexOS.git"
 
 if (Test-Path "$vaultDir\.git") {
     Info "CortexOS vault already exists at $vaultDir"
@@ -75,18 +76,17 @@ if (Test-Path "$vaultDir\.git") {
     git pull origin main 2>$null
     Success "Vault updated"
 } elseif (Test-Path $vaultDir) {
-    Info "Directory exists — initializing git..."
+    Warn "Directory $vaultDir exists but is not a git repo"
+    Info "Backing up and cloning fresh..."
+    Rename-Item $vaultDir "$vaultDir.bak"
+    git clone $repoUrl $vaultDir
     Set-Location $vaultDir
-    git init
-    git branch -M main
-    Success "Vault initialized at $vaultDir"
+    Success "Vault cloned"
 } else {
-    Info "Creating vault at $vaultDir..."
-    New-Item -ItemType Directory -Path $vaultDir -Force | Out-Null
+    Info "Cloning CortexOS into $vaultDir..."
+    git clone $repoUrl $vaultDir
     Set-Location $vaultDir
-    git init
-    git branch -M main
-    Success "Vault created at $vaultDir"
+    Success "Vault cloned"
 }
 
 # --- User profile ---
@@ -218,7 +218,7 @@ Write-Host "Opening CortexOS in Obsidian..." -ForegroundColor White
 Write-Host ""
 
 try {
-    Start-Process "obsidian://open?vault=CortexOS"
+    Start-Process "obsidian://open?vault=CortexOS-vault"
     Success "Obsidian opened"
 } catch {
     Warn "Could not open Obsidian automatically - open it manually and select $vaultDir"

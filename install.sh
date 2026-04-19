@@ -94,7 +94,9 @@ echo ""
 echo -e "${BOLD}Setting up CortexOS vault...${NC}"
 echo ""
 
-VAULT_DIR="$HOME/CortexOS"
+VAULT_DIR="$HOME/CortexOS-vault"
+REPO_URL="https://github.com/AyanaayaW/cortexOS.git"
+
 if [ -d "$VAULT_DIR/.git" ]; then
     info "CortexOS vault already exists at $VAULT_DIR"
     info "Pulling latest changes..."
@@ -102,21 +104,16 @@ if [ -d "$VAULT_DIR/.git" ]; then
     success "Vault updated"
 else
     if [ -d "$VAULT_DIR" ]; then
-        info "Directory exists but is not a git repo — initializing..."
-        cd "$VAULT_DIR"
-        if [ ! -d ".git" ]; then
-            git init
-            git branch -M main
-        fi
-        success "Vault initialized at $VAULT_DIR"
-    else
-        info "Creating vault at $VAULT_DIR..."
-        mkdir -p "$VAULT_DIR"
-        cd "$VAULT_DIR"
-        git init
-        git branch -M main
-        success "Vault created at $VAULT_DIR"
+        warn "Directory $VAULT_DIR exists but is not a git repo"
+        info "Backing up to ${VAULT_DIR}.bak and cloning fresh..."
+        mv "$VAULT_DIR" "${VAULT_DIR}.bak"
     fi
+    info "Cloning CortexOS into $VAULT_DIR..."
+    git clone "$REPO_URL" "$VAULT_DIR" && success "Vault cloned" || {
+        fail "Clone failed — check your internet connection"
+        exit 1
+    }
+    cd "$VAULT_DIR"
 fi
 
 # --- User profile ---
@@ -251,9 +248,9 @@ echo -e "${BOLD}Opening CortexOS in Obsidian...${NC}"
 echo ""
 
 if [ "$PLATFORM" = "macos" ]; then
-    open "obsidian://open?vault=CortexOS" 2>/dev/null && success "Obsidian opened" || warn "Could not open Obsidian automatically — open it manually and select ~/CortexOS"
+    open "obsidian://open?vault=CortexOS-vault" 2>/dev/null && success "Obsidian opened" || warn "Could not open Obsidian automatically — open it manually and select ~/CortexOS-vault"
 else
-    xdg-open "obsidian://open?vault=CortexOS" 2>/dev/null && success "Obsidian opened" || warn "Could not open Obsidian automatically — open it manually and select ~/CortexOS"
+    xdg-open "obsidian://open?vault=CortexOS-vault" 2>/dev/null && success "Obsidian opened" || warn "Could not open Obsidian automatically — open it manually and select ~/CortexOS-vault"
 fi
 
 # --- Summary ---
@@ -262,7 +259,7 @@ echo -e "${GREEN}${BOLD}╔═════════════════�
 echo -e "${GREEN}${BOLD}║         CortexOS is ready! 🧠            ║${NC}"
 echo -e "${GREEN}${BOLD}╚══════════════════════════════════════════╝${NC}"
 echo ""
-echo -e "  ${BOLD}Vault location:${NC}  ~/CortexOS/"
+echo -e "  ${BOLD}Vault location:${NC}  ~/CortexOS-vault/"
 echo -e "  ${BOLD}Profile:${NC}          $PROFILE"
 echo ""
 echo -e "  ${BOLD}Next steps:${NC}"
