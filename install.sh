@@ -94,7 +94,7 @@ echo ""
 echo -e "${BOLD}Setting up CortexOS vault...${NC}"
 echo ""
 
-VAULT_DIR="$HOME/CortexOS-vault"
+VAULT_DIR="$HOME/CortexOS"
 REPO_URL="https://github.com/AyanaayaW/cortexOS.git"
 
 if [ -d "$VAULT_DIR/.git" ]; then
@@ -248,9 +248,9 @@ echo -e "${BOLD}Opening CortexOS in Obsidian...${NC}"
 echo ""
 
 if [ "$PLATFORM" = "macos" ]; then
-    open "obsidian://open?vault=CortexOS-vault" 2>/dev/null && success "Obsidian opened" || warn "Could not open Obsidian automatically — open it manually and select ~/CortexOS-vault"
+    open "obsidian://open?vault=CortexOS" 2>/dev/null && success "Obsidian opened" || warn "Could not open Obsidian automatically — open it manually and select ~/CortexOS"
 else
-    xdg-open "obsidian://open?vault=CortexOS-vault" 2>/dev/null && success "Obsidian opened" || warn "Could not open Obsidian automatically — open it manually and select ~/CortexOS-vault"
+    xdg-open "obsidian://open?vault=CortexOS" 2>/dev/null && success "Obsidian opened" || warn "Could not open Obsidian automatically — open it manually and select ~/CortexOS"
 fi
 
 # --- Summary ---
@@ -259,7 +259,7 @@ echo -e "${GREEN}${BOLD}╔═════════════════�
 echo -e "${GREEN}${BOLD}║         CortexOS is ready! 🧠            ║${NC}"
 echo -e "${GREEN}${BOLD}╚══════════════════════════════════════════╝${NC}"
 echo ""
-echo -e "  ${BOLD}Vault location:${NC}  ~/CortexOS-vault/"
+echo -e "  ${BOLD}Vault location:${NC}  ~/CortexOS/"
 echo -e "  ${BOLD}Profile:${NC}          $PROFILE"
 echo ""
 echo -e "  ${BOLD}Next steps:${NC}"

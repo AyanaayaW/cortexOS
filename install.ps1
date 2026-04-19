@@ -66,7 +66,7 @@ Write-Host ""
 Write-Host "Setting up CortexOS vault..." -ForegroundColor White
 Write-Host ""
 
-$vaultDir = "$HOME\CortexOS-vault"
+$vaultDir = "$HOME\CortexOS"
 $repoUrl = "https://github.com/AyanaayaW/cortexOS.git"
 
 if (Test-Path "$vaultDir\.git") {
@@ -218,7 +218,7 @@ Write-Host "Opening CortexOS in Obsidian..." -ForegroundColor White
 Write-Host ""
 
 try {
-    Start-Process "obsidian://open?vault=CortexOS-vault"
+    Start-Process "obsidian://open?vault=CortexOS"
     Success "Obsidian opened"
 } catch {
     Warn "Could not open Obsidian automatically - open it manually and select $vaultDir"

@@ -59,7 +59,7 @@ cd ~/cortexOS-repo
 bash install.sh
 ```
 
-This clones the project repo and runs the installer, which sets up your personal vault at `~/CortexOS-vault/`.
+This clones the project repo and runs the installer, which sets up your personal vault at `~/CortexOS/`.
 
 ### Windows
 
@@ -69,7 +69,7 @@ cd $HOME\cortexOS-repo
 .\install.bat
 ```
 
-Your personal vault is created at `%USERPROFILE%\CortexOS-vault\`.
+Your personal vault is created at `%USERPROFILE%\CortexOS\`.
 
 Or directly in PowerShell:
 
@@ -125,14 +125,14 @@ No API key needed. Runs entirely on your machine.
 ### macOS / Linux
 
 ```bash
-cd ~/CortexOS-vault
+cd ~/CortexOS
 bash update.sh
 ```
 
 ### Windows
 
 ```powershell
-cd $HOME\CortexOS-vault
+cd $HOME\CortexOS
 powershell -File update.ps1
 ```
 
@@ -161,7 +161,7 @@ Install these via **Settings → Community Plugins → Browse** inside Obsidian:
 ## Vault Structure
 
 ```
-~/CortexOS-vault/
+~/CortexOS/
 ├── Dashboard.md                  ← main home screen
 ├── _System/
 │   ├── Templates/                ← note, worksheet, flashcard templates

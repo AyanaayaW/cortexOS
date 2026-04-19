@@ -1,4 +1,4 @@
 #!/usr/bin/env bash
-cd ~/CortexOS-vault
+cd ~/CortexOS
 git pull origin main
 echo "✅ CortexOS updated."
