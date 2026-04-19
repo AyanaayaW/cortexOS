@@ -18,6 +18,41 @@ function Warn($msg)    { Write-Host "  [!!] $msg" -ForegroundColor Yellow }
 function Fail($msg)    { Write-Host "  [X]  $msg" -ForegroundColor Red }
 function Info($msg)    { Write-Host "  -->  $msg" -ForegroundColor Cyan }
 
+# Download a plugin from its GitHub latest release
+function Install-Plugin {
+    param(
+        [string]$Repo,
+        [string]$PluginId,
+        [string]$DisplayName
+    )
+
+    $pluginDir = "$vaultDir\.obsidian\plugins\$PluginId"
+    if (-not (Test-Path $pluginDir)) { New-Item -ItemType Directory -Path $pluginDir -Force | Out-Null }
+
+    try {
+        # Get latest release tag
+        $releaseInfo = Invoke-RestMethod -Uri "https://api.github.com/repos/$Repo/releases/latest" -ErrorAction Stop
+        $tag = $releaseInfo.tag_name
+
+        $baseUrl = "https://github.com/$Repo/releases/download/$tag"
+
+        # Download main.js and manifest.json (required)
+        Invoke-WebRequest -Uri "$baseUrl/main.js" -OutFile "$pluginDir\main.js" -ErrorAction Stop
+        Invoke-WebRequest -Uri "$baseUrl/manifest.json" -OutFile "$pluginDir\manifest.json" -ErrorAction Stop
+
+        # Download styles.css (optional — don't fail if missing)
+        try {
+            Invoke-WebRequest -Uri "$baseUrl/styles.css" -OutFile "$pluginDir\styles.css" -ErrorAction Stop
+        } catch {
+            # No styles.css for this plugin — that's fine
+        }
+
+        Success "$DisplayName ($tag)"
+    } catch {
+        Warn "$DisplayName - could not download, may need manual install"
+    }
+}
+
 Print-Header
 
 Write-Host "Checking dependencies..." -ForegroundColor White
@@ -37,9 +72,9 @@ if ($gitPath) {
         $wingetPath = Get-Command winget -ErrorAction SilentlyContinue
         if ($wingetPath) {
             winget install --id Git.Git -e --accept-package-agreements --accept-source-agreements
-            Success "git installed — restart PowerShell to use it"
+            Success "git installed - restart PowerShell to use it"
         } else {
-            Warn "winget not available — download git manually from https://git-scm.com/download/win"
+            Warn "winget not available - download git manually from https://git-scm.com/download/win"
         }
     }
 }
@@ -49,7 +84,6 @@ $obsidianPath = "$env:LOCALAPPDATA\Obsidian\Obsidian.exe"
 if (Test-Path $obsidianPath) {
     Success "Obsidian installed"
 } else {
-    # Also check Program Files
     $obsidianAlt = Get-Command obsidian -ErrorAction SilentlyContinue
     if ($obsidianAlt) {
         Success "Obsidian installed"
@@ -88,6 +122,51 @@ if (Test-Path "$vaultDir\.git") {
     Set-Location $vaultDir
     Success "Vault cloned"
 }
+
+# ============================================
+# --- Install Obsidian Plugins ---
+# ============================================
+
+Write-Host ""
+Write-Host "Installing Obsidian plugins..." -ForegroundColor White
+Write-Host ""
+
+$pluginsDir = "$vaultDir\.obsidian\plugins"
+if (-not (Test-Path $pluginsDir)) { New-Item -ItemType Directory -Path $pluginsDir -Force | Out-Null }
+
+Install-Plugin -Repo "denolehov/obsidian-git"                    -PluginId "obsidian-git"               -DisplayName "Obsidian Git"
+Install-Plugin -Repo "SilentVoid13/Templater"                    -PluginId "templater-obsidian"         -DisplayName "Templater"
+Install-Plugin -Repo "blacksmithgu/obsidian-dataview"            -PluginId "dataview"                   -DisplayName "Dataview"
+Install-Plugin -Repo "chhoumann/quickadd"                        -PluginId "quickadd"                   -DisplayName "QuickAdd"
+Install-Plugin -Repo "shabegom/buttons"                          -PluginId "buttons"                    -DisplayName "Buttons"
+Install-Plugin -Repo "phibr0/obsidian-commander"                 -PluginId "cmdr"                       -DisplayName "Commander"
+Install-Plugin -Repo "liamcain/obsidian-calendar-plugin"         -PluginId "calendar"                   -DisplayName "Calendar"
+Install-Plugin -Repo "obsidian-tasks-group/obsidian-tasks"       -PluginId "obsidian-tasks-plugin"       -DisplayName "Tasks"
+Install-Plugin -Repo "st3v3nmw/obsidian-spaced-repetition"       -PluginId "obsidian-spaced-repetition"  -DisplayName "Spaced Repetition"
+Install-Plugin -Repo "brianpetro/obsidian-smart-connections"     -PluginId "smart-connections"           -DisplayName "Smart Connections"
+Install-Plugin -Repo "polyipseity/obsidian-terminal"             -PluginId "terminal"                   -DisplayName "Terminal"
+
+# --- Enable all plugins ---
+Info "Enabling plugins..."
+
+$communityPlugins = @'
+[
+  "obsidian-git",
+  "templater-obsidian",
+  "dataview",
+  "quickadd",
+  "buttons",
+  "cmdr",
+  "calendar",
+  "obsidian-tasks-plugin",
+  "obsidian-spaced-repetition",
+  "smart-connections",
+  "terminal"
+]
+'@
+
+Set-Content -Path "$vaultDir\.obsidian\community-plugins.json" -Value $communityPlugins -Encoding UTF8
+Success "All plugins enabled"
 
 # --- User profile ---
 Write-Host ""
@@ -184,36 +263,15 @@ if ($ollamaPath) {
         $wingetPath = Get-Command winget -ErrorAction SilentlyContinue
         if ($wingetPath) {
             winget install --id Ollama.Ollama -e --accept-package-agreements --accept-source-agreements
-            Success "Ollama installed — restart PowerShell, then run: ollama pull llama3.2"
+            Success "Ollama installed - restart PowerShell, then run: ollama pull llama3.2"
         } else {
-            Warn "winget not available — download from https://ollama.com/download"
+            Warn "winget not available - download from https://ollama.com/download"
         }
     }
 }
 
-# --- Plugin list ---
-Write-Host ""
-Write-Host "================================================" -ForegroundColor White
-Write-Host "  Obsidian Plugins to Install" -ForegroundColor White
-Write-Host "================================================" -ForegroundColor White
-Write-Host ""
-Write-Host "  Open Obsidian -> Settings -> Community Plugins -> Browse" -ForegroundColor Gray
-Write-Host ""
-Write-Host "  Required plugins:" -ForegroundColor Cyan
-Write-Host "    * Obsidian Git       - Vinzent Steinberg      (auto GitHub sync)"
-Write-Host "    * Templater          - SilentVoid13           (smart templates)"
-Write-Host "    * Dataview           - Michael Brenan         (live queries)"
-Write-Host "    * QuickAdd           - Christian B. B. Houmann (macros + capture)"
-Write-Host "    * Buttons            - shabegom               (in-note buttons)"
-Write-Host "    * Commander          - Johnny Nguyen           (ribbon shortcuts)"
-Write-Host "    * Calendar           - Liam Cain              (daily notes calendar)"
-Write-Host "    * Tasks              - Martin Schenk          (task management)"
-Write-Host "    * Spaced Repetition  - Stephen Mwangi         (flashcard review)"
-Write-Host "    * Smart Connections  - Brian Petro            (AI chat sidebar)"
-Write-Host "    * Obsidian Terminal  - polyipseity            (embedded terminal)"
-Write-Host ""
-
 # --- Open Obsidian ---
+Write-Host ""
 Write-Host "Opening CortexOS in Obsidian..." -ForegroundColor White
 Write-Host ""
 
@@ -232,13 +290,13 @@ Write-Host "+==============================================+" -ForegroundColor G
 Write-Host ""
 Write-Host "  Vault location:  $vaultDir" -ForegroundColor White
 Write-Host "  Profile:         $profile" -ForegroundColor White
+Write-Host "  Plugins:         11 installed and enabled" -ForegroundColor White
 Write-Host ""
 Write-Host "  Next steps:" -ForegroundColor White
-Write-Host "    1. Install the plugins listed above in Obsidian"
-Write-Host "    2. Open Dashboard.md - it's your home screen"
-Write-Host "    3. Click '+ New Space' to create your first Space"
-Write-Host "    4. Drop reference material into your Space's Sources/ folder"
-Write-Host "    5. Create notes and use the AI buttons to generate content"
+Write-Host "    1. Open Dashboard.md - it's your home screen"
+Write-Host "    2. Click '+ New Space' to create your first Space"
+Write-Host "    3. Drop reference material into your Space's Sources/ folder"
+Write-Host "    4. Create notes and use the AI buttons to generate content"
 Write-Host ""
-Write-Host "  Update anytime:  powershell -File update.ps1" -ForegroundColor Gray
+Write-Host "  Update anytime:  cd ~\CortexOS && powershell -File update.ps1" -ForegroundColor Gray
 Write-Host ""

@@ -79,10 +79,11 @@ powershell -ExecutionPolicy Bypass -File install.ps1
 
 The installer will:
 1. Check your dependencies (git, Obsidian)
-2. Ask what you'll use CortexOS for (academic / professional / personal / mixed)
-3. Help you set up AI tools (all optional)
-4. Print the list of Obsidian plugins to install
-5. Open your vault in Obsidian
+2. Clone the vault to `~/CortexOS`
+3. Download and install all 11 Obsidian plugins automatically
+4. Ask what you'll use CortexOS for (academic / professional / personal / mixed)
+5. Help you set up AI tools (all optional)
+6. Open your vault in Obsidian — ready to go
 
 ---
 
@@ -138,9 +139,9 @@ powershell -File update.ps1
 
 ---
 
-## Required Obsidian Plugins
+## Obsidian Plugins (auto-installed)
 
-Install these via **Settings → Community Plugins → Browse** inside Obsidian:
+These are downloaded and enabled automatically by the installer. No manual steps needed:
 
 | Plugin | Author | Purpose |
 |--------|--------|---------|

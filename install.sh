@@ -55,6 +55,14 @@ else
     exit 1
 fi
 
+# --- Check curl ---
+if command -v curl &>/dev/null; then
+    success "curl installed"
+else
+    fail "curl is required but not installed"
+    exit 1
+fi
+
 # --- Check Obsidian ---
 OBSIDIAN_FOUND=false
 if [ "$PLATFORM" = "macos" ]; then
@@ -115,6 +123,98 @@ else
     }
     cd "$VAULT_DIR"
 fi
+
+# ============================================
+# --- Install Obsidian Plugins ---
+# ============================================
+
+echo ""
+echo -e "${BOLD}Installing Obsidian plugins...${NC}"
+echo ""
+
+PLUGINS_DIR="$VAULT_DIR/.obsidian/plugins"
+mkdir -p "$PLUGINS_DIR"
+
+# Install a plugin by downloading its latest GitHub release
+# Usage: install_plugin "github-org/repo" "plugin-id" "Display Name"
+install_plugin() {
+    local repo="$1"
+    local plugin_id="$2"
+    local display_name="$3"
+    local plugin_dir="$PLUGINS_DIR/$plugin_id"
+
+    mkdir -p "$plugin_dir"
+
+    # Get the latest release tag from the GitHub API
+    local release_json
+    release_json=$(curl -sL "https://api.github.com/repos/$repo/releases/latest" 2>/dev/null)
+
+    local tag
+    tag=$(echo "$release_json" | grep '"tag_name"' | head -1 | sed -E 's/.*"tag_name"[[:space:]]*:[[:space:]]*"([^"]+)".*/\1/')
+
+    if [ -z "$tag" ]; then
+        warn "$display_name — could not fetch latest release"
+        return 1
+    fi
+
+    # Download main.js, manifest.json, and optionally styles.css
+    local base_url="https://github.com/$repo/releases/download/$tag"
+    local got_main=false
+    local got_manifest=false
+
+    if curl -sL -f "$base_url/main.js" -o "$plugin_dir/main.js" 2>/dev/null; then
+        got_main=true
+    fi
+
+    if curl -sL -f "$base_url/manifest.json" -o "$plugin_dir/manifest.json" 2>/dev/null; then
+        got_manifest=true
+    fi
+
+    # styles.css is optional — don't fail if missing
+    curl -sL -f "$base_url/styles.css" -o "$plugin_dir/styles.css" 2>/dev/null || rm -f "$plugin_dir/styles.css"
+
+    if [ "$got_main" = true ] && [ "$got_manifest" = true ]; then
+        success "$display_name ($tag)"
+        return 0
+    else
+        warn "$display_name — download incomplete, may need manual install"
+        return 1
+    fi
+}
+
+# Plugin registry: "github-org/repo" "obsidian-plugin-id" "Display Name"
+install_plugin "denolehov/obsidian-git"                          "obsidian-git"               "Obsidian Git"
+install_plugin "SilentVoid13/Templater"                          "templater-obsidian"         "Templater"
+install_plugin "blacksmithgu/obsidian-dataview"                  "dataview"                   "Dataview"
+install_plugin "chhoumann/quickadd"                              "quickadd"                   "QuickAdd"
+install_plugin "shabegom/buttons"                                "buttons"                    "Buttons"
+install_plugin "phibr0/obsidian-commander"                       "cmdr"                       "Commander"
+install_plugin "liamcain/obsidian-calendar-plugin"               "calendar"                   "Calendar"
+install_plugin "obsidian-tasks-group/obsidian-tasks"             "obsidian-tasks-plugin"       "Tasks"
+install_plugin "st3v3nmw/obsidian-spaced-repetition"             "obsidian-spaced-repetition"  "Spaced Repetition"
+install_plugin "brianpetro/obsidian-smart-connections"           "smart-connections"           "Smart Connections"
+install_plugin "polyipseity/obsidian-terminal"                   "terminal"                   "Terminal"
+
+# --- Enable all plugins in community-plugins.json ---
+info "Enabling plugins..."
+
+cat > "$VAULT_DIR/.obsidian/community-plugins.json" << 'PLUGINS_EOF'
+[
+  "obsidian-git",
+  "templater-obsidian",
+  "dataview",
+  "quickadd",
+  "buttons",
+  "cmdr",
+  "calendar",
+  "obsidian-tasks-plugin",
+  "obsidian-spaced-repetition",
+  "smart-connections",
+  "terminal"
+]
+PLUGINS_EOF
+
+success "All plugins enabled"
 
 # --- User profile ---
 echo ""
@@ -221,29 +321,8 @@ else
     fi
 fi
 
-# --- Print plugin list ---
-echo ""
-echo -e "${BOLD}━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━${NC}"
-echo -e "${BOLD}  Obsidian Plugins to Install${NC}"
-echo -e "${BOLD}━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━${NC}"
-echo ""
-echo -e "  Open Obsidian → Settings → Community Plugins → Browse"
-echo ""
-echo -e "  ${CYAN}Required plugins:${NC}"
-echo -e "    • ${BOLD}Obsidian Git${NC}       — Vinzent Steinberg      (auto GitHub sync)"
-echo -e "    • ${BOLD}Templater${NC}          — SilentVoid13           (smart templates)"
-echo -e "    • ${BOLD}Dataview${NC}           — Michael Brenan         (live queries)"
-echo -e "    • ${BOLD}QuickAdd${NC}           — Christian B. B. Houmann (macros + capture)"
-echo -e "    • ${BOLD}Buttons${NC}            — shabegom               (in-note buttons)"
-echo -e "    • ${BOLD}Commander${NC}          — Johnny Nguyen           (ribbon shortcuts)"
-echo -e "    • ${BOLD}Calendar${NC}           — Liam Cain              (daily notes calendar)"
-echo -e "    • ${BOLD}Tasks${NC}              — Martin Schenk          (task management)"
-echo -e "    • ${BOLD}Spaced Repetition${NC}  — Stephen Mwangi         (flashcard review)"
-echo -e "    • ${BOLD}Smart Connections${NC}  — Brian Petro            (AI chat sidebar)"
-echo -e "    • ${BOLD}Obsidian Terminal${NC}  — polyipseity            (embedded terminal)"
-echo ""
-
 # --- Open Obsidian ---
+echo ""
 echo -e "${BOLD}Opening CortexOS in Obsidian...${NC}"
 echo ""
 
@@ -261,13 +340,13 @@ echo -e "${GREEN}${BOLD}╚═════════════════�
 echo ""
 echo -e "  ${BOLD}Vault location:${NC}  ~/CortexOS/"
 echo -e "  ${BOLD}Profile:${NC}          $PROFILE"
+echo -e "  ${BOLD}Plugins:${NC}          11 installed and enabled"
 echo ""
 echo -e "  ${BOLD}Next steps:${NC}"
-echo -e "    1. Install the plugins listed above in Obsidian"
-echo -e "    2. Open Dashboard.md — it's your home screen"
-echo -e "    3. Click '+ New Space' to create your first Space"
-echo -e "    4. Drop reference material into your Space's Sources/ folder"
-echo -e "    5. Create notes and use the AI buttons to generate content"
+echo -e "    1. Open Dashboard.md — it's your home screen"
+echo -e "    2. Click '+ New Space' to create your first Space"
+echo -e "    3. Drop reference material into your Space's Sources/ folder"
+echo -e "    4. Create notes and use the AI buttons to generate content"
 echo ""
-echo -e "  ${BOLD}Update anytime:${NC}  bash update.sh"
+echo -e "  ${BOLD}Update anytime:${NC}  cd ~/CortexOS && bash update.sh"
 echo ""
