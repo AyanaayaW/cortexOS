@@ -2,10 +2,10 @@
 .obsidian/workspace.json
 .obsidian/workspace-mobile.json
 .obsidian/app.json
-*.mp4
-*.mov
-*.zip
 .DS_Store
 **/.DS_Store
+*.mp4
+*.mov
+node_modules/
 .env
 *.env

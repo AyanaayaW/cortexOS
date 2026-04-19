@@ -1,0 +1,51 @@
+{
+  "collapse-filter": false,
+  "search": "",
+  "showTags": true,
+  "showAttachments": false,
+  "hideUnresolved": false,
+  "showOrphans": true,
+  "collapse-color-groups": false,
+  "colorGroups": [
+    {
+      "query": "path:Notes",
+      "color": {
+        "a": 1,
+        "rgb": 5809919
+      }
+    },
+    {
+      "query": "path:Worksheets",
+      "color": {
+        "a": 1,
+        "rgb": 15770880
+      }
+    },
+    {
+      "query": "path:Sources",
+      "color": {
+        "a": 1,
+        "rgb": 4175184
+      }
+    },
+    {
+      "query": "path:Daily Notes",
+      "color": {
+        "a": 1,
+        "rgb": 9145478
+      }
+    }
+  ],
+  "collapse-display": false,
+  "showArrow": true,
+  "textFadeMultiplier": 0,
+  "nodeSizeMultiplier": 1,
+  "lineSizeMultiplier": 1,
+  "collapse-forces": false,
+  "centerStrength": 0.5,
+  "repelStrength": 10,
+  "linkStrength": 1,
+  "linkDistance": 250,
+  "scale": 1,
+  "close": false
+}

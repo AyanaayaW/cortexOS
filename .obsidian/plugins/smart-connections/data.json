@@ -1,0 +1,9 @@
+{
+  "model": "claude-3-5-sonnet-20241022",
+  "api_key_setting": "stored_in_plugin_settings",
+  "ollama_model": "llama3.2",
+  "chat_model": "claude-3-5-sonnet-20241022",
+  "enable_mobile": true,
+  "smart_chat": true,
+  "context_window": true
+}

@@ -1,0 +1,35 @@
+{
+  "profiles": [
+    {
+      "type": "integrated",
+      "name": "CortexOS Terminal (macOS)",
+      "executable": "/bin/zsh",
+      "platforms": {
+        "darwin": true,
+        "linux": false,
+        "win32": false
+      }
+    },
+    {
+      "type": "integrated",
+      "name": "CortexOS Terminal (Linux)",
+      "executable": "/bin/bash",
+      "platforms": {
+        "darwin": false,
+        "linux": true,
+        "win32": false
+      }
+    },
+    {
+      "type": "integrated",
+      "name": "CortexOS Terminal (Windows)",
+      "executable": "powershell.exe",
+      "platforms": {
+        "darwin": false,
+        "linux": false,
+        "win32": true
+      }
+    }
+  ],
+  "openTerminalOnStartup": false
+}

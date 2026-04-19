@@ -1,0 +1,455 @@
+/* ============================================
+   CortexOS — Custom Obsidian Theme
+   Dark mode · Navy/Charcoal · Electric Blue Accent
+   ============================================ */
+
+/* --- Root Variables --- */
+.theme-dark {
+  --background-primary: #0d1117;
+  --background-primary-alt: #161b22;
+  --background-secondary: #161b22;
+  --background-secondary-alt: #1c2128;
+  --background-modifier-border: #30363d;
+  --background-modifier-form-field: #0d1117;
+  --background-modifier-form-field-highlighted: #161b22;
+  --background-modifier-box-shadow: rgba(0, 0, 0, 0.3);
+  --background-modifier-success: #238636;
+  --background-modifier-error: #da3633;
+  --background-modifier-error-rgb: 218, 54, 51;
+  --background-modifier-error-hover: #f85149;
+  --background-modifier-cover: rgba(13, 17, 23, 0.8);
+
+  --text-normal: #e6edf3;
+  --text-muted: #8b949e;
+  --text-faint: #6e7681;
+  --text-on-accent: #ffffff;
+  --text-error: #f85149;
+  --text-error-hover: #da3633;
+  --text-highlight-bg: rgba(88, 166, 255, 0.15);
+  --text-highlight-bg-active: rgba(88, 166, 255, 0.25);
+  --text-selection: rgba(88, 166, 255, 0.3);
+  --text-accent: #58a6ff;
+  --text-accent-hover: #79c0ff;
+
+  --interactive-normal: #21262d;
+  --interactive-hover: #30363d;
+  --interactive-accent: #58a6ff;
+  --interactive-accent-rgb: 88, 166, 255;
+  --interactive-accent-hover: #79c0ff;
+  --interactive-success: #3fb950;
+
+  --scrollbar-bg: #0d1117;
+  --scrollbar-thumb-bg: #30363d;
+  --scrollbar-active-thumb-bg: #484f58;
+
+  --link-color: #58a6ff;
+  --link-color-hover: #79c0ff;
+  --link-external-color: #a78bfa;
+  --link-external-color-hover: #c4b5fd;
+  --link-unresolved-color: #8b949e;
+
+  --tag-color: #a78bfa;
+  --tag-background: rgba(167, 139, 250, 0.15);
+  --tag-color-hover: #c4b5fd;
+  --tag-background-hover: rgba(167, 139, 250, 0.25);
+
+  --code-normal: #e6edf3;
+  --code-background: #161b22;
+  --code-comment: #8b949e;
+
+  --blockquote-border-color: #58a6ff;
+
+  --h1-color: #58a6ff;
+  --h2-color: #79c0ff;
+  --h3-color: #a78bfa;
+  --h4-color: #c4b5fd;
+  --h5-color: #e6edf3;
+  --h6-color: #8b949e;
+}
+
+/* --- Typography --- */
+body {
+  --font-text-theme: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", sans-serif;
+  --font-monospace-theme: "JetBrains Mono", "Fira Code", "Cascadia Code", "Consolas", monospace;
+}
+
+.theme-dark {
+  --font-text: var(--font-text-theme);
+  --font-monospace: var(--font-monospace-theme);
+}
+
+/* Headings use monospace for that terminal/code feel */
+.theme-dark h1,
+.theme-dark .HyperMD-header-1,
+.theme-dark .cm-header-1 {
+  font-family: var(--font-monospace-theme);
+  color: var(--h1-color);
+  font-weight: 700;
+  font-size: 1.8em;
+  border-bottom: 2px solid #30363d;
+  padding-bottom: 0.3em;
+}
+
+.theme-dark h2,
+.theme-dark .HyperMD-header-2,
+.theme-dark .cm-header-2 {
+  font-family: var(--font-monospace-theme);
+  color: var(--h2-color);
+  font-weight: 600;
+  font-size: 1.4em;
+}
+
+.theme-dark h3,
+.theme-dark .cm-header-3 {
+  color: var(--h3-color);
+  font-weight: 600;
+  font-size: 1.2em;
+}
+
+.theme-dark h4,
+.theme-dark .cm-header-4 {
+  color: var(--h4-color);
+  font-weight: 500;
+}
+
+/* --- Workspace --- */
+.theme-dark .workspace-leaf {
+  background-color: var(--background-primary);
+}
+
+.theme-dark .workspace-tab-header-container {
+  background-color: var(--background-secondary);
+  border-bottom: 1px solid var(--background-modifier-border);
+}
+
+.theme-dark .workspace-tab-header.is-active {
+  background-color: var(--background-primary);
+  border-bottom: 2px solid var(--interactive-accent);
+}
+
+/* --- Sidebar hidden by default — nav via buttons --- */
+.nav-files-container {
+  display: none;
+}
+
+/* Show on hover for escape hatch */
+.workspace-split.mod-left-split:hover .nav-files-container {
+  display: block;
+}
+
+/* --- Callout Blocks --- */
+.theme-dark .callout {
+  background-color: var(--background-secondary);
+  border: 1px solid var(--background-modifier-border);
+  border-radius: 8px;
+  padding: 1em;
+}
+
+.theme-dark .callout[data-callout="abstract"] {
+  border-left: 4px solid #58a6ff;
+}
+
+.theme-dark .callout[data-callout="tip"] {
+  border-left: 4px solid #3fb950;
+}
+
+.theme-dark .callout[data-callout="info"] {
+  border-left: 4px solid #58a6ff;
+}
+
+.theme-dark .callout[data-callout="note"] {
+  border-left: 4px solid #a78bfa;
+}
+
+.theme-dark .callout[data-callout="warning"] {
+  border-left: 4px solid #f0a500;
+}
+
+.theme-dark .callout[data-callout="example"] {
+  border-left: 4px solid #a78bfa;
+}
+
+.theme-dark .callout[data-callout="summary"] {
+  border-left: 4px solid #3fb950;
+  background-color: rgba(63, 185, 80, 0.05);
+}
+
+.theme-dark .callout-title {
+  color: var(--text-normal);
+  font-weight: 600;
+}
+
+/* --- Buttons (pill-shaped, electric blue) --- */
+.theme-dark button,
+.theme-dark .button-default,
+.theme-dark .mod-cta {
+  background-color: #58a6ff;
+  color: #ffffff;
+  border: none;
+  border-radius: 20px;
+  padding: 8px 20px;
+  font-weight: 600;
+  font-size: 0.9em;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  text-transform: none;
+  box-shadow: 0 2px 8px rgba(88, 166, 255, 0.2);
+}
+
+.theme-dark button:hover,
+.theme-dark .button-default:hover,
+.theme-dark .mod-cta:hover {
+  background-color: #79c0ff;
+  box-shadow: 0 4px 12px rgba(88, 166, 255, 0.35);
+  transform: translateY(-1px);
+}
+
+.theme-dark button:active {
+  transform: translateY(0);
+  box-shadow: 0 1px 4px rgba(88, 166, 255, 0.2);
+}
+
+/* Buttons plugin specific */
+.theme-dark .block-language-button button {
+  background-color: #58a6ff;
+  color: #ffffff;
+  border: none;
+  border-radius: 20px;
+  padding: 10px 24px;
+  font-weight: 600;
+  margin: 4px 8px 4px 0;
+  display: inline-block;
+}
+
+.theme-dark .block-language-button button:hover {
+  background-color: #79c0ff;
+}
+
+/* --- Code Blocks --- */
+.theme-dark code {
+  background-color: var(--code-background);
+  color: var(--code-normal);
+  border-radius: 4px;
+  padding: 2px 6px;
+  font-family: var(--font-monospace-theme);
+  font-size: 0.9em;
+}
+
+.theme-dark pre {
+  background-color: var(--code-background);
+  border: 1px solid var(--background-modifier-border);
+  border-radius: 8px;
+  padding: 1em;
+}
+
+/* --- Tables --- */
+.theme-dark table {
+  border-collapse: collapse;
+  width: 100%;
+}
+
+.theme-dark th {
+  background-color: var(--background-secondary);
+  color: var(--text-accent);
+  font-weight: 600;
+  border-bottom: 2px solid var(--interactive-accent);
+}
+
+.theme-dark th,
+.theme-dark td {
+  padding: 8px 12px;
+  border: 1px solid var(--background-modifier-border);
+}
+
+.theme-dark tr:hover {
+  background-color: var(--background-primary-alt);
+}
+
+/* --- Tags --- */
+.theme-dark .tag {
+  background-color: var(--tag-background);
+  color: var(--tag-color);
+  border-radius: 12px;
+  padding: 2px 10px;
+  font-size: 0.85em;
+}
+
+.theme-dark .tag:hover {
+  background-color: var(--tag-background-hover);
+  color: var(--tag-color-hover);
+}
+
+/* --- Checkboxes / Tasks --- */
+.theme-dark input[type="checkbox"] {
+  accent-color: #58a6ff;
+}
+
+.theme-dark input[type="checkbox"]:checked {
+  accent-color: #3fb950;
+}
+
+/* --- Blockquotes --- */
+.theme-dark blockquote {
+  border-left: 3px solid var(--blockquote-border-color);
+  padding-left: 1em;
+  color: var(--text-muted);
+  font-style: italic;
+}
+
+/* --- Scrollbar --- */
+.theme-dark ::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+.theme-dark ::-webkit-scrollbar-track {
+  background: var(--scrollbar-bg);
+}
+
+.theme-dark ::-webkit-scrollbar-thumb {
+  background: var(--scrollbar-thumb-bg);
+  border-radius: 4px;
+}
+
+.theme-dark ::-webkit-scrollbar-thumb:hover {
+  background: var(--scrollbar-active-thumb-bg);
+}
+
+/* --- Embedded Terminal Styling --- */
+.theme-dark .terminal-container,
+.theme-dark .xterm {
+  background-color: #0d1117 !important;
+}
+
+.theme-dark .xterm-viewport {
+  background-color: #0d1117 !important;
+}
+
+.theme-dark .xterm-cursor-layer {
+  color: #58a6ff;
+}
+
+/* --- Graph View --- */
+.theme-dark .graph-view.color-fill {
+  color: #58a6ff;
+}
+
+.theme-dark .graph-view.color-circle {
+  color: #a78bfa;
+}
+
+.theme-dark .graph-view.color-line {
+  color: #30363d;
+}
+
+.theme-dark .graph-view.color-text {
+  color: #e6edf3;
+}
+
+.theme-dark .graph-view.color-fill-highlight {
+  color: #79c0ff;
+}
+
+.theme-dark .graph-view.color-line-highlight {
+  color: #58a6ff;
+}
+
+/* --- LaTeX / MathJax --- */
+.theme-dark .MathJax {
+  color: var(--text-normal);
+}
+
+/* --- Dataview --- */
+.theme-dark .dataview.table-view-table th {
+  background-color: var(--background-secondary);
+  color: var(--text-accent);
+}
+
+.theme-dark .dataview.list-view-ul li {
+  margin-bottom: 4px;
+}
+
+/* --- Search --- */
+.theme-dark .search-result-file-title {
+  color: var(--text-accent);
+  font-weight: 600;
+}
+
+.theme-dark .search-result-file-matched-text {
+  color: var(--interactive-accent);
+  background-color: var(--text-highlight-bg);
+}
+
+/* --- Ribbon --- */
+.theme-dark .side-dock-ribbon {
+  background-color: var(--background-secondary);
+}
+
+.theme-dark .side-dock-ribbon-action:hover {
+  color: var(--interactive-accent);
+}
+
+/* --- Status Bar --- */
+.theme-dark .status-bar {
+  background-color: var(--background-secondary);
+  border-top: 1px solid var(--background-modifier-border);
+  color: var(--text-muted);
+  font-size: 0.8em;
+}
+
+/* --- Modal Dialogs --- */
+.theme-dark .modal {
+  background-color: var(--background-primary);
+  border: 1px solid var(--background-modifier-border);
+  border-radius: 12px;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.5);
+}
+
+/* --- Dashboard-specific styles --- */
+.theme-dark .cssclass-dashboard .callout {
+  margin-bottom: 1em;
+}
+
+.theme-dark .cssclass-dashboard h1 {
+  text-align: center;
+  font-size: 2.2em;
+  margin-bottom: 0.5em;
+}
+
+/* --- Links --- */
+.theme-dark a.internal-link {
+  color: var(--link-color);
+  text-decoration: none;
+}
+
+.theme-dark a.internal-link:hover {
+  color: var(--link-color-hover);
+  text-decoration: underline;
+}
+
+.theme-dark a.external-link {
+  color: var(--link-external-color);
+}
+
+.theme-dark a.external-link:hover {
+  color: var(--link-external-color-hover);
+}
+
+/* --- Tooltip --- */
+.theme-dark .tooltip {
+  background-color: var(--background-secondary-alt);
+  color: var(--text-normal);
+  border: 1px solid var(--background-modifier-border);
+  border-radius: 6px;
+}
+
+/* --- Selection --- */
+.theme-dark ::selection {
+  background-color: var(--text-selection);
+}
+
+/* --- Focus Ring --- */
+.theme-dark *:focus-visible {
+  outline: 2px solid var(--interactive-accent);
+  outline-offset: 2px;
+}

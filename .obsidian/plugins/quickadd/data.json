@@ -1,0 +1,127 @@
+{
+  "choices": [
+    {
+      "id": "cortexos-generate-note",
+      "name": "CortexOS: Generate Note",
+      "type": "Macro",
+      "macro": {
+        "name": "CortexOS: Generate Note",
+        "commands": [
+          {
+            "name": "GenerateNote",
+            "type": "UserScript",
+            "settings": {
+              "path": "_System/Config/Macros/GenerateNote.js"
+            }
+          }
+        ]
+      }
+    },
+    {
+      "id": "cortexos-generate-worksheet",
+      "name": "CortexOS: Generate Worksheet",
+      "type": "Macro",
+      "macro": {
+        "name": "CortexOS: Generate Worksheet",
+        "commands": [
+          {
+            "name": "GenerateWorksheet",
+            "type": "UserScript",
+            "settings": {
+              "path": "_System/Config/Macros/GenerateWorksheet.js"
+            }
+          }
+        ]
+      }
+    },
+    {
+      "id": "cortexos-select-model",
+      "name": "CortexOS: Select Model",
+      "type": "Macro",
+      "macro": {
+        "name": "CortexOS: Select Model",
+        "commands": [
+          {
+            "name": "SelectModel",
+            "type": "UserScript",
+            "settings": {
+              "path": "_System/Config/Macros/SelectModel.js"
+            }
+          }
+        ]
+      }
+    },
+    {
+      "id": "cortexos-new-space",
+      "name": "CortexOS: New Space",
+      "type": "Macro",
+      "macro": {
+        "name": "CortexOS: New Space",
+        "commands": [
+          {
+            "name": "NewSpace",
+            "type": "UserScript",
+            "settings": {
+              "path": "_System/Config/Macros/NewSpace.js"
+            }
+          }
+        ]
+      }
+    }
+  ],
+  "macros": [
+    {
+      "name": "CortexOS: Generate Note",
+      "id": "cortexos-generate-note",
+      "commands": [
+        {
+          "name": "GenerateNote",
+          "type": "UserScript",
+          "settings": {
+            "path": "_System/Config/Macros/GenerateNote.js"
+          }
+        }
+      ]
+    },
+    {
+      "name": "CortexOS: Generate Worksheet",
+      "id": "cortexos-generate-worksheet",
+      "commands": [
+        {
+          "name": "GenerateWorksheet",
+          "type": "UserScript",
+          "settings": {
+            "path": "_System/Config/Macros/GenerateWorksheet.js"
+          }
+        }
+      ]
+    },
+    {
+      "name": "CortexOS: Select Model",
+      "id": "cortexos-select-model",
+      "commands": [
+        {
+          "name": "SelectModel",
+          "type": "UserScript",
+          "settings": {
+            "path": "_System/Config/Macros/SelectModel.js"
+          }
+        }
+      ]
+    },
+    {
+      "name": "CortexOS: New Space",
+      "id": "cortexos-new-space",
+      "commands": [
+        {
+          "name": "NewSpace",
+          "type": "UserScript",
+          "settings": {
+            "path": "_System/Config/Macros/NewSpace.js"
+          }
+        }
+      ]
+    }
+  ],
+  "inputPrompt": "enabled"
+}
