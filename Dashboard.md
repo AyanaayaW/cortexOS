@@ -89,6 +89,22 @@ cssclass: dashboard
 
 ---
 
+> [!gear] System
+>
+> ```button
+> name Check for Updates
+> type command
+> action QuickAdd: CortexOS: Check for Updates
+> ```
+>
+> ```button
+> name Update CortexOS
+> type command
+> action QuickAdd: CortexOS: Update
+> ```
+
+---
+
 > [!note] Recently Modified
 >
 > ```dataview

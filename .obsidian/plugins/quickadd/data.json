@@ -67,6 +67,40 @@
           }
         ]
       }
+    },
+    {
+      "id": "cortexos-check-updates",
+      "name": "CortexOS: Check for Updates",
+      "type": "Macro",
+      "macro": {
+        "name": "CortexOS: Check for Updates",
+        "commands": [
+          {
+            "name": "CheckForUpdates",
+            "type": "UserScript",
+            "settings": {
+              "path": "_System/Config/Macros/CheckForUpdates.js"
+            }
+          }
+        ]
+      }
+    },
+    {
+      "id": "cortexos-run-update",
+      "name": "CortexOS: Update",
+      "type": "Macro",
+      "macro": {
+        "name": "CortexOS: Update",
+        "commands": [
+          {
+            "name": "RunUpdate",
+            "type": "UserScript",
+            "settings": {
+              "path": "_System/Config/Macros/RunUpdate.js"
+            }
+          }
+        ]
+      }
     }
   ],
   "macros": [
@@ -118,6 +152,32 @@
           "type": "UserScript",
           "settings": {
             "path": "_System/Config/Macros/NewSpace.js"
+          }
+        }
+      ]
+    },
+    {
+      "name": "CortexOS: Check for Updates",
+      "id": "cortexos-check-updates",
+      "commands": [
+        {
+          "name": "CheckForUpdates",
+          "type": "UserScript",
+          "settings": {
+            "path": "_System/Config/Macros/CheckForUpdates.js"
+          }
+        }
+      ]
+    },
+    {
+      "name": "CortexOS: Update",
+      "id": "cortexos-run-update",
+      "commands": [
+        {
+          "name": "RunUpdate",
+          "type": "UserScript",
+          "settings": {
+            "path": "_System/Config/Macros/RunUpdate.js"
           }
         }
       ]
