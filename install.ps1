@@ -292,6 +292,11 @@ Write-Host "  Vault location:  $vaultDir" -ForegroundColor White
 Write-Host "  Profile:         $profile" -ForegroundColor White
 Write-Host "  Plugins:         11 installed and enabled" -ForegroundColor White
 Write-Host ""
+Write-Host "  IMPORTANT - first launch only:" -ForegroundColor Yellow
+Write-Host "    When Obsidian opens, it will ask about community plugins."
+Write-Host "    Click 'Turn off restricted mode' then 'Trust author and enable plugins'."
+Write-Host "    This activates all 11 plugins. You only need to do this once."
+Write-Host ""
 Write-Host "  Next steps:" -ForegroundColor White
 Write-Host "    1. Open Dashboard.md - it's your home screen"
 Write-Host "    2. Click '+ New Space' to create your first Space"

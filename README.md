@@ -83,7 +83,9 @@ The installer will:
 3. Download and install all 11 Obsidian plugins automatically
 4. Ask what you'll use CortexOS for (academic / professional / personal / mixed)
 5. Help you set up AI tools (all optional)
-6. Open your vault in Obsidian — ready to go
+6. Open your vault in Obsidian
+
+> **First launch:** Obsidian will ask about community plugins. Click **"Turn off restricted mode"** then **"Trust author and enable plugins"**. This is a one-time Obsidian security prompt — after that, all 11 plugins are active.
 
 ---
 
