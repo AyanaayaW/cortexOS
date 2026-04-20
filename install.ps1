@@ -275,11 +275,13 @@ Write-Host ""
 Write-Host "Opening CortexOS in Obsidian..." -ForegroundColor White
 Write-Host ""
 
+# Use path= instead of vault= so Obsidian registers a brand-new vault
+$encodedPath = [uri]::EscapeDataString($vaultDir)
 try {
-    Start-Process "obsidian://open?vault=CortexOS"
+    Start-Process "obsidian://open?path=$encodedPath"
     Success "Obsidian opened"
 } catch {
-    Warn "Could not open Obsidian automatically - open it manually and select $vaultDir"
+    Warn "Could not open Obsidian automatically - open $vaultDir in Obsidian manually"
 }
 
 # --- Summary ---

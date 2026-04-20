@@ -326,10 +326,13 @@ echo ""
 echo -e "${BOLD}Opening CortexOS in Obsidian...${NC}"
 echo ""
 
+# Use path= instead of vault= so Obsidian registers a brand-new vault
+ENCODED_PATH=$(python3 -c "import urllib.parse; print(urllib.parse.quote('$VAULT_DIR'))" 2>/dev/null || echo "$VAULT_DIR")
+
 if [ "$PLATFORM" = "macos" ]; then
-    open "obsidian://open?vault=CortexOS" 2>/dev/null && success "Obsidian opened" || warn "Could not open Obsidian automatically — open it manually and select ~/CortexOS"
+    open "obsidian://open?path=${ENCODED_PATH}" 2>/dev/null && success "Obsidian opened" || warn "Could not open Obsidian automatically — open ~/CortexOS in Obsidian manually"
 else
-    xdg-open "obsidian://open?vault=CortexOS" 2>/dev/null && success "Obsidian opened" || warn "Could not open Obsidian automatically — open it manually and select ~/CortexOS"
+    xdg-open "obsidian://open?path=${ENCODED_PATH}" 2>/dev/null && success "Obsidian opened" || warn "Could not open Obsidian automatically — open ~/CortexOS in Obsidian manually"
 fi
 
 # --- Summary ---
