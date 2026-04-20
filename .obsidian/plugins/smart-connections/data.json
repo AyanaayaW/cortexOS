@@ -6,5 +6,6 @@
   "enable_mobile": true,
   "smart_chat": true,
   "context_window": true,
-  "installed_at": 1776691831331
+  "installed_at": 1776691831331,
+  "last_version": "4.3.0"
 }
