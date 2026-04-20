@@ -321,18 +321,53 @@ else
     fi
 fi
 
-# --- Open Obsidian ---
+# --- Register vault with Obsidian and open ---
 echo ""
 echo -e "${BOLD}Opening CortexOS in Obsidian...${NC}"
 echo ""
 
-# Use path= instead of vault= so Obsidian registers a brand-new vault
-ENCODED_PATH=$(python3 -c "import urllib.parse; print(urllib.parse.quote('$VAULT_DIR'))" 2>/dev/null || echo "$VAULT_DIR")
+# Obsidian keeps a vault registry at a known location per OS.
+# We inject our vault there so obsidian://open?vault=CortexOS works.
+register_vault() {
+    local config_file=""
+    if [ "$PLATFORM" = "macos" ]; then
+        config_file="$HOME/Library/Application Support/obsidian/obsidian.json"
+    else
+        config_file="$HOME/.config/obsidian/obsidian.json"
+    fi
+
+    if [ ! -f "$config_file" ]; then
+        # Obsidian hasn't been run yet — create the config dir and file
+        mkdir -p "$(dirname "$config_file")"
+        echo '{"vaults":{}}' > "$config_file"
+    fi
+
+    # Use python3 to safely add our vault to the JSON
+    python3 << PYEOF 2>/dev/null
+import json, uuid, os
+
+config_path = "$config_file"
+vault_path  = "$VAULT_DIR"
+
+with open(config_path, "r") as f:
+    data = json.load(f)
+
+# Check if vault is already registered
+already = any(v.get("path") == vault_path for v in data.get("vaults", {}).values())
+if not already:
+    vid = uuid.uuid4().hex[:16]
+    data.setdefault("vaults", {})[vid] = {"path": vault_path, "ts": int(__import__('time').time() * 1000)}
+    with open(config_path, "w") as f:
+        json.dump(data, f, indent=2)
+PYEOF
+}
+
+register_vault && info "Vault registered with Obsidian"
 
 if [ "$PLATFORM" = "macos" ]; then
-    open "obsidian://open?path=${ENCODED_PATH}" 2>/dev/null && success "Obsidian opened" || warn "Could not open Obsidian automatically — open ~/CortexOS in Obsidian manually"
+    open "obsidian://open?vault=CortexOS" 2>/dev/null && success "Obsidian opened" || warn "Could not open Obsidian — open it manually and select ~/CortexOS"
 else
-    xdg-open "obsidian://open?path=${ENCODED_PATH}" 2>/dev/null && success "Obsidian opened" || warn "Could not open Obsidian automatically — open ~/CortexOS in Obsidian manually"
+    xdg-open "obsidian://open?vault=CortexOS" 2>/dev/null && success "Obsidian opened" || warn "Could not open Obsidian — open it manually and select ~/CortexOS"
 fi
 
 # --- Summary ---

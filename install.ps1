@@ -275,10 +275,37 @@ Write-Host ""
 Write-Host "Opening CortexOS in Obsidian..." -ForegroundColor White
 Write-Host ""
 
-# Use path= instead of vault= so Obsidian registers a brand-new vault
-$encodedPath = [uri]::EscapeDataString($vaultDir)
+# Register the vault in Obsidian's config so it knows about it
+$obsidianConfig = "$env:APPDATA\obsidian\obsidian.json"
+if (-not (Test-Path (Split-Path $obsidianConfig))) {
+    New-Item -ItemType Directory -Path (Split-Path $obsidianConfig) -Force | Out-Null
+}
+if (-not (Test-Path $obsidianConfig)) {
+    '{"vaults":{}}' | Set-Content $obsidianConfig -Encoding UTF8
+}
+
 try {
-    Start-Process "obsidian://open?path=$encodedPath"
+    $config = Get-Content $obsidianConfig -Raw | ConvertFrom-Json
+    # Check if vault already registered
+    $alreadyRegistered = $false
+    if ($config.vaults) {
+        foreach ($prop in $config.vaults.PSObject.Properties) {
+            if ($prop.Value.path -eq $vaultDir) { $alreadyRegistered = $true; break }
+        }
+    }
+    if (-not $alreadyRegistered) {
+        $vid = [guid]::NewGuid().ToString("N").Substring(0, 16)
+        $ts = [long]([datetime]::UtcNow - [datetime]"1970-01-01").TotalMilliseconds
+        $config.vaults | Add-Member -NotePropertyName $vid -NotePropertyValue @{ path = $vaultDir; ts = $ts }
+        $config | ConvertTo-Json -Depth 10 | Set-Content $obsidianConfig -Encoding UTF8
+        Info "Vault registered with Obsidian"
+    }
+} catch {
+    Warn "Could not auto-register vault - you may need to open the folder manually in Obsidian"
+}
+
+try {
+    Start-Process "obsidian://open?vault=CortexOS"
     Success "Obsidian opened"
 } catch {
     Warn "Could not open Obsidian automatically - open $vaultDir in Obsidian manually"
