@@ -1,35 +1,95 @@
 {
-  "profiles": [
-    {
-      "type": "integrated",
-      "name": "CortexOS Terminal (macOS)",
+  "addToCommand": true,
+  "addToContextMenu": true,
+  "createInstanceNearExistingOnes": true,
+  "errorNoticeTimeout": 0,
+  "exposeInternalModules": true,
+  "focusOnNewInstance": true,
+  "hideStatusBar": "focused",
+  "interceptLogging": true,
+  "language": "",
+  "macOSOptionKeyPassthrough": true,
+  "newInstanceBehavior": "newHorizontalSplit",
+  "noticeTimeout": 5,
+  "openChangelogOnUpdate": true,
+  "pinNewInstance": true,
+  "preferredRenderer": "webgl",
+  "profiles": {
+    "0": {
+      "args": [],
       "executable": "/bin/zsh",
+      "followTheme": true,
+      "name": "CortexOS Terminal (macOS)",
       "platforms": {
         "darwin": true,
         "linux": false,
         "win32": false
-      }
-    },
-    {
+      },
+      "pythonExecutable": "",
+      "restoreHistory": false,
+      "rightClickAction": "copyPaste",
+      "successExitCodes": [
+        "0",
+        "SIGINT",
+        "SIGTERM"
+      ],
+      "terminalOptions": {
+        "documentOverride": null
+      },
       "type": "integrated",
-      "name": "CortexOS Terminal (Linux)",
+      "useWin32Conhost": true
+    },
+    "1": {
+      "args": [],
       "executable": "/bin/bash",
+      "followTheme": true,
+      "name": "CortexOS Terminal (Linux)",
       "platforms": {
         "darwin": false,
         "linux": true,
         "win32": false
-      }
-    },
-    {
+      },
+      "pythonExecutable": "",
+      "restoreHistory": false,
+      "rightClickAction": "copyPaste",
+      "successExitCodes": [
+        "0",
+        "SIGINT",
+        "SIGTERM"
+      ],
+      "terminalOptions": {
+        "documentOverride": null
+      },
       "type": "integrated",
-      "name": "CortexOS Terminal (Windows)",
+      "useWin32Conhost": true
+    },
+    "2": {
+      "args": [],
       "executable": "powershell.exe",
+      "followTheme": true,
+      "name": "CortexOS Terminal (Windows)",
       "platforms": {
         "darwin": false,
         "linux": false,
         "win32": true
-      }
+      },
+      "pythonExecutable": "",
+      "restoreHistory": false,
+      "rightClickAction": "copyPaste",
+      "successExitCodes": [
+        "0",
+        "SIGINT",
+        "SIGTERM"
+      ],
+      "terminalOptions": {
+        "documentOverride": null
+      },
+      "type": "integrated",
+      "useWin32Conhost": true
     }
-  ],
-  "openTerminalOnStartup": false
+  },
+  "defaultProfile": null,
+  "terminalOptions": {
+    "documentOverride": null
+  }
 }
