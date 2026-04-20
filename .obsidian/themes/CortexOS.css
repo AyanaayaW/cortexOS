@@ -127,15 +127,7 @@ body {
   border-bottom: 2px solid var(--interactive-accent);
 }
 
-/* --- Sidebar hidden by default — nav via buttons --- */
-.nav-files-container {
-  display: none;
-}
-
-/* Show on hover for escape hatch */
-.workspace-split.mod-left-split:hover .nav-files-container {
-  display: block;
-}
+/* --- Sidebar always visible --- */
 
 /* --- Callout Blocks --- */
 .theme-dark .callout {
