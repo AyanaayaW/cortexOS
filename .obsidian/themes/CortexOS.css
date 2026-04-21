@@ -397,15 +397,144 @@ body {
   box-shadow: 0 8px 32px rgba(0, 0, 0, 0.5);
 }
 
-/* --- Dashboard-specific styles --- */
-.theme-dark .cssclass-dashboard .callout {
-  margin-bottom: 1em;
+/* --- Hide Properties / Frontmatter block --- */
+.metadata-container {
+  display: none !important;
 }
 
-.theme-dark .cssclass-dashboard h1 {
-  text-align: center;
-  font-size: 2.2em;
-  margin-bottom: 0.5em;
+/* --- Dashboard — Notion-style layout --- */
+
+/* Title: large, left-aligned, no border */
+.dashboard h1 {
+  font-size: 2.4em;
+  font-weight: 700;
+  margin-bottom: 0.1em;
+  border-bottom: none !important;
+  padding-bottom: 0 !important;
+}
+
+/* Date subtitle under title */
+.dashboard p:first-of-type code {
+  background: none;
+  color: var(--text-muted);
+  font-family: var(--font-text-theme);
+  font-size: 0.95em;
+  padding: 0;
+  border: none;
+  font-weight: 400;
+}
+
+/* Section headings: smaller, muted, like Notion database headers */
+.dashboard h2 {
+  font-size: 0.78em;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--text-muted) !important;
+  margin-top: 2em;
+  margin-bottom: 0.6em;
+  border-bottom: none;
+}
+
+/* Horizontal rules: subtle */
+.dashboard hr {
+  border: none;
+  border-top: 1px solid var(--background-modifier-border);
+  margin: 1.2em 0;
+  opacity: 0.5;
+}
+
+/* Buttons: flow inline side-by-side */
+.dashboard .block-language-button {
+  display: inline-block;
+  margin: 0 6px 8px 0;
+}
+
+.dashboard .block-language-button button {
+  background-color: var(--background-secondary);
+  color: var(--text-normal);
+  border: 1px solid var(--background-modifier-border);
+  border-radius: 8px;
+  padding: 6px 14px;
+  font-size: 0.88em;
+  font-weight: 500;
+  box-shadow: none;
+  transition: background 0.15s ease, border-color 0.15s ease;
+}
+
+.dashboard .block-language-button button:hover {
+  background-color: var(--interactive-hover);
+  border-color: var(--interactive-accent);
+  transform: none;
+  box-shadow: none;
+}
+
+/* Remove callout chrome from dashboard — plain content sections */
+.dashboard .callout {
+  background: none !important;
+  border: none !important;
+  border-radius: 0 !important;
+  padding: 0 !important;
+  box-shadow: none !important;
+}
+
+.dashboard .callout-title {
+  display: none !important;
+}
+
+.dashboard .callout-content {
+  padding: 0 !important;
+  margin: 0 !important;
+}
+
+/* Dataview tables: clean, no outer border */
+.dashboard .dataview.table-view-table {
+  border: none;
+  font-size: 0.9em;
+}
+
+.dashboard .dataview.table-view-table th {
+  background: none;
+  color: var(--text-muted);
+  font-size: 0.78em;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  border-top: none;
+  border-left: none;
+  border-right: none;
+  padding: 4px 12px;
+}
+
+.dashboard .dataview.table-view-table td {
+  border-left: none;
+  border-right: none;
+  padding: 5px 12px;
+}
+
+.dashboard .dataview.table-view-table tr:hover {
+  background-color: var(--background-secondary);
+  border-radius: 4px;
+}
+
+/* Task list: clean */
+.dashboard .contains-task-list {
+  font-size: 0.92em;
+  padding-left: 0;
+}
+
+/* List view: no bullets for spaces list */
+.dashboard .dataview.list-view-ul {
+  padding-left: 0;
+  list-style: none;
+}
+
+.dashboard .dataview.list-view-ul li {
+  padding: 3px 0;
+  font-size: 0.92em;
+}
+
+.dashboard .dataview.list-view-ul li::before {
+  content: none;
 }
 
 /* --- Links --- */
