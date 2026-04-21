@@ -216,6 +216,210 @@ PLUGINS_EOF
 
 success "All plugins enabled"
 
+# --- Write default workspace layout (terminal in right pane) ---
+if [ ! -f "$VAULT_DIR/.obsidian/workspace.json" ]; then
+    # Detect shell and platform flags for the terminal profile
+    if [ "$PLATFORM" = "macos" ]; then
+        TERM_SHELL="/bin/zsh"
+        TERM_NAME="CortexOS Terminal (macOS)"
+        TERM_DARWIN="true"
+        TERM_LINUX="false"
+    else
+        TERM_SHELL="/bin/bash"
+        TERM_NAME="CortexOS Terminal (Linux)"
+        TERM_DARWIN="false"
+        TERM_LINUX="true"
+    fi
+
+    cat > "$VAULT_DIR/.obsidian/workspace.json" << WORKSPACE_EOF
+{
+  "main": {
+    "id": "a0b1c2d3e4f50001",
+    "type": "split",
+    "children": [
+      {
+        "id": "a0b1c2d3e4f50002",
+        "type": "tabs",
+        "children": [
+          {
+            "id": "a0b1c2d3e4f50003",
+            "type": "leaf",
+            "state": {
+              "type": "empty",
+              "state": {},
+              "icon": "lucide-file",
+              "title": "New tab"
+            }
+          }
+        ]
+      }
+    ],
+    "direction": "vertical"
+  },
+  "left": {
+    "id": "a0b1c2d3e4f50010",
+    "type": "split",
+    "children": [
+      {
+        "id": "a0b1c2d3e4f50011",
+        "type": "tabs",
+        "children": [
+          {
+            "id": "a0b1c2d3e4f50012",
+            "type": "leaf",
+            "state": {
+              "type": "file-explorer",
+              "state": {
+                "sortOrder": "alphabetical",
+                "autoReveal": false
+              },
+              "icon": "lucide-folder-closed",
+              "title": "Files"
+            }
+          },
+          {
+            "id": "a0b1c2d3e4f50013",
+            "type": "leaf",
+            "state": {
+              "type": "search",
+              "state": {
+                "query": "",
+                "matchingCase": false,
+                "explainSearch": false,
+                "collapseAll": false,
+                "extraContext": false,
+                "sortOrder": "alphabetical"
+              },
+              "icon": "lucide-search",
+              "title": "Search"
+            }
+          },
+          {
+            "id": "a0b1c2d3e4f50014",
+            "type": "leaf",
+            "state": {
+              "type": "bookmarks",
+              "state": {},
+              "icon": "lucide-bookmark",
+              "title": "Bookmarks"
+            }
+          }
+        ]
+      }
+    ],
+    "direction": "horizontal",
+    "width": 200
+  },
+  "right": {
+    "id": "a0b1c2d3e4f50020",
+    "type": "split",
+    "children": [
+      {
+        "id": "a0b1c2d3e4f50021",
+        "type": "tabs",
+        "children": [
+          {
+            "id": "a0b1c2d3e4f50022",
+            "type": "leaf",
+            "state": {
+              "type": "terminal:terminal",
+              "state": {
+                "terminal:terminal": {
+                  "cwd": null,
+                  "focus": false,
+                  "profile": {
+                    "args": [],
+                    "executable": "${TERM_SHELL}",
+                    "followTheme": true,
+                    "name": "${TERM_NAME}",
+                    "platforms": {
+                      "darwin": ${TERM_DARWIN},
+                      "linux": ${TERM_LINUX},
+                      "win32": false
+                    },
+                    "pythonExecutable": "/usr/bin/python3",
+                    "restoreHistory": false,
+                    "rightClickAction": "copyPaste",
+                    "successExitCodes": ["0", "SIGINT", "SIGTERM"],
+                    "terminalOptions": {
+                      "documentOverride": null
+                    },
+                    "type": "integrated",
+                    "useWin32Conhost": true
+                  },
+                  "serial": null
+                }
+              },
+              "icon": "lucide-terminal",
+              "title": "Terminal"
+            }
+          },
+          {
+            "id": "a0b1c2d3e4f50023",
+            "type": "leaf",
+            "state": {
+              "type": "backlink",
+              "state": {
+                "collapseAll": false,
+                "extraContext": false,
+                "sortOrder": "alphabetical",
+                "showSearch": false,
+                "searchQuery": "",
+                "backlinkCollapsed": false,
+                "unlinkedCollapsed": true
+              },
+              "icon": "links-coming-in",
+              "title": "Backlinks"
+            }
+          },
+          {
+            "id": "a0b1c2d3e4f50024",
+            "type": "leaf",
+            "state": {
+              "type": "smart-connections-view",
+              "state": {},
+              "icon": "smart-connections",
+              "title": "Connections"
+            }
+          },
+          {
+            "id": "a0b1c2d3e4f50025",
+            "type": "leaf",
+            "state": {
+              "type": "tag",
+              "state": {
+                "sortOrder": "frequency",
+                "useHierarchy": true,
+                "showSearch": false,
+                "searchQuery": ""
+              },
+              "icon": "lucide-tags",
+              "title": "Tags"
+            }
+          }
+        ],
+        "currentTab": 0
+      }
+    ],
+    "direction": "horizontal",
+    "width": 300
+  },
+  "left-ribbon": {
+    "hiddenItems": {
+      "switcher:Open quick switcher": false,
+      "graph:Open graph view": false,
+      "canvas:Create new canvas": false,
+      "command-palette:Open command palette": false,
+      "terminal:Open terminal": false
+    }
+  },
+  "active": "a0b1c2d3e4f50022",
+  "lastOpenFiles": []
+}
+WORKSPACE_EOF
+    success "Default workspace layout set (terminal in right pane)"
+fi
+
 # --- User profile ---
 echo ""
 echo -e "${BOLD}What will you use CortexOS for?${NC}"

@@ -168,6 +168,199 @@ $communityPlugins = @'
 Set-Content -Path "$vaultDir\.obsidian\community-plugins.json" -Value $communityPlugins -Encoding UTF8
 Success "All plugins enabled"
 
+# --- Write default workspace layout (terminal in right pane) ---
+$workspaceFile = "$vaultDir\.obsidian\workspace.json"
+if (-not (Test-Path $workspaceFile)) {
+    $workspaceJson = @'
+{
+  "main": {
+    "id": "a0b1c2d3e4f50001",
+    "type": "split",
+    "children": [
+      {
+        "id": "a0b1c2d3e4f50002",
+        "type": "tabs",
+        "children": [
+          {
+            "id": "a0b1c2d3e4f50003",
+            "type": "leaf",
+            "state": {
+              "type": "empty",
+              "state": {},
+              "icon": "lucide-file",
+              "title": "New tab"
+            }
+          }
+        ]
+      }
+    ],
+    "direction": "vertical"
+  },
+  "left": {
+    "id": "a0b1c2d3e4f50010",
+    "type": "split",
+    "children": [
+      {
+        "id": "a0b1c2d3e4f50011",
+        "type": "tabs",
+        "children": [
+          {
+            "id": "a0b1c2d3e4f50012",
+            "type": "leaf",
+            "state": {
+              "type": "file-explorer",
+              "state": {
+                "sortOrder": "alphabetical",
+                "autoReveal": false
+              },
+              "icon": "lucide-folder-closed",
+              "title": "Files"
+            }
+          },
+          {
+            "id": "a0b1c2d3e4f50013",
+            "type": "leaf",
+            "state": {
+              "type": "search",
+              "state": {
+                "query": "",
+                "matchingCase": false,
+                "explainSearch": false,
+                "collapseAll": false,
+                "extraContext": false,
+                "sortOrder": "alphabetical"
+              },
+              "icon": "lucide-search",
+              "title": "Search"
+            }
+          },
+          {
+            "id": "a0b1c2d3e4f50014",
+            "type": "leaf",
+            "state": {
+              "type": "bookmarks",
+              "state": {},
+              "icon": "lucide-bookmark",
+              "title": "Bookmarks"
+            }
+          }
+        ]
+      }
+    ],
+    "direction": "horizontal",
+    "width": 200
+  },
+  "right": {
+    "id": "a0b1c2d3e4f50020",
+    "type": "split",
+    "children": [
+      {
+        "id": "a0b1c2d3e4f50021",
+        "type": "tabs",
+        "children": [
+          {
+            "id": "a0b1c2d3e4f50022",
+            "type": "leaf",
+            "state": {
+              "type": "terminal:terminal",
+              "state": {
+                "terminal:terminal": {
+                  "cwd": null,
+                  "focus": false,
+                  "profile": {
+                    "args": [],
+                    "executable": "powershell.exe",
+                    "followTheme": true,
+                    "name": "CortexOS Terminal (Windows)",
+                    "platforms": {
+                      "darwin": false,
+                      "linux": false,
+                      "win32": true
+                    },
+                    "pythonExecutable": "python.exe",
+                    "restoreHistory": false,
+                    "rightClickAction": "copyPaste",
+                    "successExitCodes": ["0", "SIGINT", "SIGTERM"],
+                    "terminalOptions": {
+                      "documentOverride": null
+                    },
+                    "type": "integrated",
+                    "useWin32Conhost": true
+                  },
+                  "serial": null
+                }
+              },
+              "icon": "lucide-terminal",
+              "title": "Terminal"
+            }
+          },
+          {
+            "id": "a0b1c2d3e4f50023",
+            "type": "leaf",
+            "state": {
+              "type": "backlink",
+              "state": {
+                "collapseAll": false,
+                "extraContext": false,
+                "sortOrder": "alphabetical",
+                "showSearch": false,
+                "searchQuery": "",
+                "backlinkCollapsed": false,
+                "unlinkedCollapsed": true
+              },
+              "icon": "links-coming-in",
+              "title": "Backlinks"
+            }
+          },
+          {
+            "id": "a0b1c2d3e4f50024",
+            "type": "leaf",
+            "state": {
+              "type": "smart-connections-view",
+              "state": {},
+              "icon": "smart-connections",
+              "title": "Connections"
+            }
+          },
+          {
+            "id": "a0b1c2d3e4f50025",
+            "type": "leaf",
+            "state": {
+              "type": "tag",
+              "state": {
+                "sortOrder": "frequency",
+                "useHierarchy": true,
+                "showSearch": false,
+                "searchQuery": ""
+              },
+              "icon": "lucide-tags",
+              "title": "Tags"
+            }
+          }
+        ],
+        "currentTab": 0
+      }
+    ],
+    "direction": "horizontal",
+    "width": 300
+  },
+  "left-ribbon": {
+    "hiddenItems": {
+      "switcher:Open quick switcher": false,
+      "graph:Open graph view": false,
+      "canvas:Create new canvas": false,
+      "command-palette:Open command palette": false,
+      "terminal:Open terminal": false
+    }
+  },
+  "active": "a0b1c2d3e4f50022",
+  "lastOpenFiles": []
+}
+'@
+    Set-Content -Path $workspaceFile -Value $workspaceJson -Encoding UTF8
+    Success "Default workspace layout set (terminal in right pane)"
+}
+
 # --- User profile ---
 Write-Host ""
 Write-Host "What will you use CortexOS for?" -ForegroundColor White
