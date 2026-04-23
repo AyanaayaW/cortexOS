@@ -10,5 +10,6 @@
   "alwaysUpdateLinks": true,
   "newFileLocation": "folder",
   "newFileFolderPath": "Inbox",
-  "attachmentFolderPath": "./Assets"
+  "attachmentFolderPath": "./Assets",
+  "showInlineTitle": false
 }
