@@ -1,6 +1,7 @@
 {
-  "cssTheme": "CortexOS",
+  "cssTheme": "Tokyo Night Simple",
   "theme": "obsidian",
   "baseFontSize": 16,
-  "enabledCssSnippets": []
+  "enabledCssSnippets": [],
+  "accentColor": "#7aa2f7"
 }
